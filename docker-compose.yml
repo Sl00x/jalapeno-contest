@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./app
+    restart: always
+    ports:
+      - "3000:3000"
+
+  api:
+    build:
+      context: .
+      dockerfile: ./api
+    restart: always
+    env_file: .env
+    ports:
+      - "3100":3100
+
+#  nginx:
+#    build: ./nginx
+#    restart: always
+#    ports:
+#      - "443:443"
+#    volumes:
+#      - ./nginx/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro
+#      - ./ssl:/ssl:ro
+#      - ./logs/nginx:/var/log/nginx
+#    depends_on:
+#      - app
+#      - api
