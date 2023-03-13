@@ -2,17 +2,13 @@ version: "3.9"
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: ./app
+    build: ./app
     restart: always
     ports:
       - "3000:3000"
 
   api:
-    build:
-      context: .
-      dockerfile: ./api
+    build: ./api
     restart: always
     env_file: .env
     ports:
