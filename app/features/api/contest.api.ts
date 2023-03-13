@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
+import Contest from "../models/contest.model";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://del-teatro.fr/api", //api link here
+  baseUrl: "/api/contest",
   mode: "cors",
   prepareHeaders: (headers, { getState }) => {
     if (localStorage.getItem("authenticated")) {
@@ -16,11 +17,19 @@ const baseQuery = fetchBaseQuery({
 });
 export const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });
 
-export const rootApi = createApi({
-  reducerPath: "rootApi",
+export const contestApi = createApi({
+  reducerPath: "contestApi",
   baseQuery: baseQuery,
-  tagTypes: ["User"],
-  endpoints: (builder) => ({}),
+  tagTypes: ["Contest"],
+  endpoints: (builder) => ({
+    getContests: builder.query<Contest[], void>({
+      query: () => ({
+        url: "",
+        method: "GET",
+        type: "application/json",
+      }),
+    }),
+  }),
 });
 
-export const {} = rootApi;
+export const { useGetContestsQuery } = contestApi;

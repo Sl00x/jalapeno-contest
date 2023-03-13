@@ -1,13 +1,23 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
-import { Layout } from '../../components/Layout/Layout'
-
-const inter = Inter({ subsets: ['latin'] })
+import ContestsList from "@/components/ContestsList/ContestsList";
+import ListTitle from "@/components/ListTitle/ListTitle";
+import SearchBar from "@/components/Searchbar/Searchbar";
+import { useGetContestsQuery } from "../../features/api/contest.api";
 
 export default function Home() {
+  const { data: contests } = useGetContestsQuery();
+
   return (
-    <Layout searchBar />
-  )
+    <div>
+      <SearchBar />
+      <div className="px-5">
+        <div className="py-5">
+          <ListTitle title="Top concours" />
+        </div>
+        <ContestsList contests={contests ?? []} />
+        <div className="py-5">
+          <ListTitle title="Concours terminés" />
+        </div>
+      </div>
+    </div>
+  );
 }
