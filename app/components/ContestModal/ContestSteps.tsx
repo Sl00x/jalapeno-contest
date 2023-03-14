@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { FC, useState } from "react";
 import { RiUser2Line } from "react-icons/ri";
-import Contest from "../../../features/models/contest.model";
+import Contest from "../../features/models/contest.model";
 
 interface ContestStepsProps {
   steps: Contest["steps"];
