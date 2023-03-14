@@ -28,6 +28,7 @@ model User {
   firstname       String
   lastname        String
   password        String
+  balance         Float     @default(0)
   birthdate       DateTime
   createdAt       DateTime  @default(now())
   deleteAt        DateTime?
@@ -62,10 +63,12 @@ model Step {
 }
 
 model PartsOfContests {
+  id        Int     @default(autoincrement()) @id
   contest   Contest @relation(fields: [contestId], references: [id])
   contestId Int
   user      User    @relation(fields: [userId], references: [id])
   userId    Int
-
-  @@id([contestId, userId])
+  
+  createdAt     DateTime  @default(now())
+  deleteAt      DateTime?
 }

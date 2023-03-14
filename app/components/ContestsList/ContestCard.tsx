@@ -1,19 +1,9 @@
 import { FC } from "react";
-import Contest from "../../../features/models/contest.model";
 import TimeAgo from "javascript-time-ago";
 import clsx from "clsx";
 import { RiUser2Line } from "react-icons/ri";
-
-const getStep = (steps: Contest["steps"], participants: number) => {
-  let actualStep = steps[0];
-
-  for (const step of steps) {
-    if (participants < step.threshold) break;
-    actualStep = step;
-  }
-
-  return actualStep;
-};
+import { getStep } from "../../utils/contest";
+import Contest from "../../features/models/contest.model";
 
 interface ContestCardProps {
   contest: Contest;
@@ -24,7 +14,7 @@ const timeAgo = new TimeAgo("fr-FR");
 
 const ContestCard: FC<ContestCardProps> = ({ contest, onClick }) => {
   const participants = contest.participants.length;
-  const step = getStep(contest.steps, participants);
+  const { step } = getStep(contest.steps, participants);
   const startAt = new Date(contest.startAt);
   const endAt = new Date(contest.endAt);
   const timeLeft = timeAgo.format(endAt);

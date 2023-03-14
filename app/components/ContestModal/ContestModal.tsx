@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { RiGiftLine, RiListCheck, RiTicket2Line } from "react-icons/ri";
 import Contest from "../../features/models/contest.model";
+import { getStep } from "../../utils/contest";
 import ContestSteps from "./ContestSteps";
 
 interface ContestModalProps {
@@ -9,15 +10,13 @@ interface ContestModalProps {
 }
 
 const ContestModal: FC<ContestModalProps> = ({ contest, onClose }) => {
-  return (
-    <div
-      className="relative z-10"
-      aria-labelledby="modal-title"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div className="fixed inset-0 bg-black bg-opacity-75 transition-opacity"></div>
+  const { stepNumber } = getStep(contest.steps, contest.participants.length);
+  // const tickets = contest.participants.filter(({user: {id}}) => id === user.id).length
+  const tickets = 0;
 
+  return (
+    <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div className="fixed inset-0 bg-black bg-opacity-75 transition-opacity"></div>
       <div className="fixed inset-0 overflow-y-auto" onClick={onClose}>
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <div
@@ -39,7 +38,7 @@ const ContestModal: FC<ContestModalProps> = ({ contest, onClose }) => {
                       <div>
                         Étape:{" "}
                         <span className="text-red-jalapeno font-medium">
-                          1/4
+                          {stepNumber}/{contest.steps.length}
                         </span>
                       </div>
                     </div>
@@ -47,7 +46,7 @@ const ContestModal: FC<ContestModalProps> = ({ contest, onClose }) => {
                       <RiTicket2Line />
                       <div>
                         Mes tickets:{" "}
-                        <span className="text-red-jalapeno font-medium">0</span>
+                        <span className="text-red-jalapeno font-medium">{tickets}</span>
                       </div>
                     </div>
                   </div>
@@ -57,17 +56,12 @@ const ContestModal: FC<ContestModalProps> = ({ contest, onClose }) => {
                 </div>
               </div>
               <div className="mt-4">
-                <ContestSteps
-                  steps={contest.steps}
-                  participants={contest.participants.length}
-                />
+                <ContestSteps steps={contest.steps} participants={contest.participants.length} />
               </div>
             </div>
             <div className="bg-red-jalapeno text-white w-full text-center mt-2 py-4 cursor-pointer flex flex-row items-center justify-center space-x-2">
               <RiTicket2Line size={20} />
-              <div className="font-medium">
-                Acheter un ticket pour {contest.price}€
-              </div>
+              <div className="font-medium">Acheter un ticket pour {contest.price}€</div>
             </div>
           </div>
         </div>

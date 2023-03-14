@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { contestApi } from "../api/contest.api";
+import { contestApi } from "../api/contest-api";
 import { rootApi } from "../api/root-api";
 
 export const RootStore = configureStore({

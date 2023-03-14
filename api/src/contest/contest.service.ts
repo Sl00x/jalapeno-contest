@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Contest } from '@prisma/client';
+import { Contest, User } from '@prisma/client';
 
 @Injectable()
 export class ContestService {
   constructor(private prisma: PrismaService) {}
 
-  async getContests(): Promise<Contest[]> {
+  async getContests() {
     return this.prisma.contest.findMany({
       include: {
         steps: {
@@ -30,6 +34,32 @@ export class ContestService {
           },
         },
       },
+      where: { steps: { some: {} } },
+    });
+  }
+
+  async participate(contestId: Contest['id'], userId: User['id']) {
+    const contest = await this.prisma.contest.findFirst({
+      where: { id: contestId },
+    });
+    if (contest === null) {
+      throw new NotFoundException('Concours inexistant');
+    }
+    const user = await this.prisma.user.findFirstOrThrow({
+      where: { id: userId },
+      include: { partOfContests: true },
+    });
+
+    if (user.balance < contest.price) {
+      throw new BadRequestException('Solde insuffisant');
+    }
+
+    await this.prisma.user.update({
+      data: {
+        balance: user.balance - contest.price,
+        partOfContests: { create: [{ contestId }] },
+      },
+      where: { id: user.id },
     });
   }
 }
