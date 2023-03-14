@@ -26,7 +26,7 @@ export class UserService {
             throw new ConflictException('Email déjà utilisé');
           }
         }
-        throw new InternalServerErrorException();
+        throw error;
       });
 
     return user;
