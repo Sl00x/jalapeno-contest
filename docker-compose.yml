@@ -41,6 +41,7 @@ services:
       - ./api:/app
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
+      JWT_SECRET: "Secret jwt pass"
     depends_on:
       database:
         condition: service_healthy

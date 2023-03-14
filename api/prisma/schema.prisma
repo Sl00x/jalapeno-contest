@@ -27,6 +27,7 @@ model User {
   email           String    @unique
   firstname       String
   lastname        String
+  password        String
   birthdate       DateTime
   createdAt       DateTime  @default(now())
   deleteAt        DateTime?

@@ -19,4 +19,8 @@ export class UserCreateInput {
   @IsDateString()
   @IsNotEmpty()
   birthdate: Date;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 }
