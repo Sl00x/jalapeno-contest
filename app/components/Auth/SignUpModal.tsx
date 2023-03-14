@@ -1,9 +1,5 @@
 import { FC, useState } from "react";
-import {
-  RiLoginCircleLine,
-  RiRegisteredLine,
-  RiTicket2Line,
-} from "react-icons/ri";
+import { RiLoginCircleLine, RiRegisteredLine, RiTicket2Line } from "react-icons/ri";
 
 interface SignInModalProps {
   onClose: () => void;
@@ -16,12 +12,7 @@ const SignUpModal: FC<SignInModalProps> = ({ onClose }) => {
   const [birthdate, setBirthdate] = useState("");
   const [password, setPassword] = useState("");
   return (
-    <div
-      className="relative z-10"
-      aria-labelledby="modal-title"
-      role="dialog"
-      aria-modal="true"
-    >
+    <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="fixed inset-0 bg-black bg-opacity-75 transition-opacity"></div>
 
       <div className="fixed inset-0 overflow-y-auto" onClick={onClose}>
@@ -40,7 +31,8 @@ const SignUpModal: FC<SignInModalProps> = ({ onClose }) => {
                 <div className="flex flex-col space-y-2">
                   <div className="text-3xl font-bold">Inscription</div>
                   <div>
-                    Profitez de nombreux avantage avec {"l'inscription"}.
+                    Inscrivez-vous pour pouvoir participer aux différents concours. Ils n'attendent
+                    que vous !
                   </div>
                 </div>
               </div>

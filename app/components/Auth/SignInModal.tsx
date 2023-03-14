@@ -9,12 +9,7 @@ const SignInModal: FC<SignInModalProps> = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   return (
-    <div
-      className="relative z-10"
-      aria-labelledby="modal-title"
-      role="dialog"
-      aria-modal="true"
-    >
+    <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="fixed inset-0 bg-black bg-opacity-75 transition-opacity"></div>
 
       <div className="fixed inset-0 overflow-y-auto" onClick={onClose}>
@@ -32,7 +27,10 @@ const SignInModal: FC<SignInModalProps> = ({ onClose }) => {
                 </div>
                 <div className="flex flex-col space-y-2">
                   <div className="text-3xl font-bold">Connexion</div>
-                  <div>Profitez de nombreux avantage avec la connexion.</div>
+                  <div>
+                    Connectez-vous pour participer aux concours et accéder aux concours auxquels
+                    vous avez participés !
+                  </div>
                 </div>
               </div>
               <div className="mt-4 w-full flex flex-col">
