@@ -1,5 +1,7 @@
 import { FC, useState } from "react";
-import { RiLoginCircleLine, RiRegisteredLine, RiTicket2Line } from "react-icons/ri";
+import { RiRegisteredLine, RiTicket2Line, RiCheckLine } from "react-icons/ri";
+import toast from "react-hot-toast";
+import { ErrorToast, SuccessToast } from "../../utils/toast";
 
 interface SignInModalProps {
   onClose: () => void;
@@ -12,7 +14,12 @@ const SignUpModal: FC<SignInModalProps> = ({ onClose }) => {
   const [birthdate, setBirthdate] = useState("");
   const [password, setPassword] = useState("");
   return (
-    <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div
+      className="relative z-10"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
       <div className="fixed inset-0 bg-black bg-opacity-75 transition-opacity"></div>
 
       <div className="fixed inset-0 overflow-y-auto" onClick={onClose}>
@@ -31,8 +38,8 @@ const SignUpModal: FC<SignInModalProps> = ({ onClose }) => {
                 <div className="flex flex-col space-y-2">
                   <div className="text-3xl font-bold">Inscription</div>
                   <div>
-                    Inscrivez-vous pour pouvoir participer aux différents concours. Ils n'attendent
-                    que vous !
+                    Inscrivez-vous pour pouvoir participer aux différents
+                    concours. {"Ils n'attendent que vous !"}
                   </div>
                 </div>
               </div>
@@ -78,7 +85,10 @@ const SignUpModal: FC<SignInModalProps> = ({ onClose }) => {
                 />
               </div>
             </div>
-            <div className="bg-red-jalapeno text-white w-full text-center mt-2 py-4 cursor-pointer flex flex-row items-center justify-center space-x-2">
+            <div
+              onClick={() => ErrorToast("Bienvenu parmis nous !")}
+              className="bg-red-jalapeno text-white w-full text-center mt-2 py-4 cursor-pointer flex flex-row items-center justify-center space-x-2"
+            >
               <RiTicket2Line size={20} />
               <div className="font-medium">{"S'inscrire"}</div>
             </div>
