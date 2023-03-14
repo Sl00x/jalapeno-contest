@@ -16,6 +16,7 @@ module.exports = {
         "red-jalapeno-lighter": "#FF3E71",
         "gray-light": "#F1F1F1",
         "gray-dark": "#DCDCDC",
+        "gray-darker": "#C0C0C0",
       },
     },
   },

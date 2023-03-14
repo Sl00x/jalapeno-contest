@@ -1,3 +1,4 @@
+import ContestModal from "@/components/ContestModal/ContestModal";
 import ContestsList from "@/components/ContestsList/ContestsList";
 import ListTitle from "@/components/ListTitle/ListTitle";
 import SearchBar from "@/components/Searchbar/Searchbar";
@@ -22,6 +23,9 @@ export default function Home() {
           <ListTitle title="Concours terminés" />
         </div>
       </div>
+      {selectedContest && (
+        <ContestModal contest={selectedContest} onClose={() => setSelectedContest(undefined)} />
+      )}
     </div>
   );
 }

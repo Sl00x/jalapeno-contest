@@ -30,7 +30,7 @@ const ContestCard: FC<ContestCardProps> = ({ contest, onClick }) => {
   const timeLeft = timeAgo.format(endAt);
   const hasBegan = startAt <= new Date();
 
-  const percent = (participants * 100) / step.threshold;
+  const percent = Math.min((participants * 100) / step.threshold, 100);
 
   return (
     <div className="bg-gray-light pt-4 cursor-pointer" onClick={onClick}>
