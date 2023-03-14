@@ -17,11 +17,12 @@ const getStep = (steps: Contest["steps"], participants: number) => {
 
 interface ContestCardProps {
   contest: Contest;
+  onClick: () => void;
 }
 
 const timeAgo = new TimeAgo("fr-FR");
 
-const ContestCard: FC<ContestCardProps> = ({ contest }) => {
+const ContestCard: FC<ContestCardProps> = ({ contest, onClick }) => {
   const participants = contest.participants.length;
   const step = getStep(contest.steps, participants);
   const startAt = new Date(contest.startAt);
@@ -32,7 +33,7 @@ const ContestCard: FC<ContestCardProps> = ({ contest }) => {
   const percent = (participants * 100) / step.threshold;
 
   return (
-    <div className="bg-gray-light pt-4">
+    <div className="bg-gray-light pt-4 cursor-pointer" onClick={onClick}>
       <div className="px-8 flex flex-col space-y-4">
         <div className="text-2xl text-center">{contest.name}</div>
         <div className="flex w-full items-center justify-center">
