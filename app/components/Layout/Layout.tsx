@@ -1,10 +1,12 @@
 import { useRouter } from "next/router";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useContext, useEffect, useState } from "react";
 import { RiGiftLine } from "react-icons/ri";
 import { menus } from "../../constants/menu.const";
 import { SignBox } from "./SignBox";
 import SignInModal from "../Auth/SignInModal";
 import SignUpModal from "../Auth/SignUpModal";
+import { AuthContext } from "../Auth/AuthProvider";
+import { ProfilBox } from "./ProfilBox";
 
 interface Props {
   children?: ReactElement | ReactElement[];
@@ -15,6 +17,7 @@ export const Layout: React.FC<Props> = ({ children }) => {
   const [currentPath, setCurrentPath] = useState("/");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     setCurrentPath(router.pathname);
@@ -65,10 +68,14 @@ export const Layout: React.FC<Props> = ({ children }) => {
             </>
           </div>
         </div>
-        <SignBox
-          onLoginClick={() => setShowLoginModal(true)}
-          onRegisterClick={() => setShowRegisterModal(true)}
-        />
+        {user ? (
+          <ProfilBox />
+        ) : (
+          <SignBox
+            onLoginClick={() => setShowLoginModal(true)}
+            onRegisterClick={() => setShowRegisterModal(true)}
+          />
+        )}
       </div>
       <div className="flex-1 h-screen w-full overflow-y-auto">{children}</div>
     </div>

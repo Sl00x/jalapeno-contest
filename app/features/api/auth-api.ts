@@ -20,14 +20,15 @@ export const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: baseQuery,
-  tagTypes: ["Contest"],
+  tagTypes: ["Contest", "Profile"],
   endpoints: (builder) => ({
-    getProfile: builder.query<User[], void>({
+    getProfile: builder.query<User, void>({
       query: () => ({
         url: "/profile",
         method: "GET",
         type: "application/json",
       }),
+      providesTags: ["Profile"],
     }),
     register: builder.mutation<User, Partial<User>>({
       query: (body) => ({
@@ -37,7 +38,10 @@ export const authApi = createApi({
         body,
       }),
     }),
-    login: builder.mutation<User, { email: string; password: string }>({
+    login: builder.mutation<
+      { access_token: string },
+      { email: string; password: string }
+    >({
       query: (body) => ({
         url: "/login",
         method: "POST",
@@ -48,4 +52,5 @@ export const authApi = createApi({
   }),
 });
 
-export const { useGetProfileQuery, useLoginMutation, useRegisterMutation } = authApi;
+export const { useGetProfileQuery, useLoginMutation, useRegisterMutation } =
+  authApi;

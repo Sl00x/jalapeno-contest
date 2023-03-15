@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import Contest from "../models/contest.model";
+import { AnyARecord } from "dns";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "/api/contest",
@@ -17,33 +18,20 @@ const baseQuery = fetchBaseQuery({
 });
 export const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });
 
-export const contestApi = createApi({
-  reducerPath: "contestApi",
+export const userApi = createApi({
+  reducerPath: "userApi",
   baseQuery: baseQuery,
   tagTypes: ["Contest", "Profile", "ProfileTickets"],
   endpoints: (builder) => ({
-    getContests: builder.query<Contest[], void>({
-      query: () => ({
-        url: "",
+    getTicketForContest: builder.query<any[], number>({
+      query: (id) => ({
+        url: `/${id}/tickets`,
         method: "GET",
         type: "application/json",
       }),
-      providesTags: ["Contest"],
-    }),
-
-    participate: builder.mutation<Contest, number>({
-      query: (id: number) => ({
-        url: `/${id}/participate`,
-        method: "POST",
-        type: "application/json",
-      }),
-      invalidatesTags: ["Contest", "Profile", "ProfileTickets"],
+      providesTags: ["ProfileTickets"],
     }),
   }),
 });
 
-export const {
-  useGetContestsQuery,
-  useLazyGetContestsQuery,
-  useParticipateMutation,
-} = contestApi;
+export const { useGetTicketForContestQuery } = userApi;

@@ -1,8 +1,12 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -13,26 +17,37 @@ export class AuthService {
     private prisma: PrismaService,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.userService.findOne(username);
+  async validateUser(
+    email: string,
+    pass: string,
+  ): Promise<Omit<User, 'password'>> {
+    const user = await this.userService.findOne(email);
     if (user && (await bcrypt.compare(pass, user.password))) {
-      const { password, ...result } = user;
+      const { ...result } = user;
       return result;
     }
     return null;
   }
 
   async login(user: any) {
+    const result = await this.validateUser(user.email, user.password);
+    if (result === null)
+      throw new BadRequestException("L'utilisateur entré n'existe pas.");
+
     const payload = {
-      username: user.email,
-      sub: user.id,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      balance: user.balance,
+      username: result.email,
+      sub: result.id,
+      firstname: result.firstname,
+      lastname: result.lastname,
+      balance: result.balance,
     };
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async getUser(user: any) {
+    return await this.userService.findById(user.id);
   }
 
   async createUser(data: Prisma.UserCreateInput) {

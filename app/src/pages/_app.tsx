@@ -7,6 +7,7 @@ import TimeAgo from "javascript-time-ago";
 import fr from "javascript-time-ago/locale/fr.json";
 import { toast, Toaster, ToastBar } from "react-hot-toast";
 import { RiCloseLine } from "react-icons/ri";
+import { AuthProvider } from "../../components/Auth/AuthProvider";
 
 TimeAgo.addLocale(fr);
 
@@ -25,9 +26,11 @@ export default function App({ Component, pageProps }: AppProps) {
           </ToastBar>
         )}
       </Toaster>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <AuthProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </AuthProvider>
     </Provider>
   );
 }

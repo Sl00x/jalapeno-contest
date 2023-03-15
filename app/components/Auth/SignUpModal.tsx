@@ -1,7 +1,8 @@
-import { FC, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { RiRegisteredLine, RiTicket2Line, RiCheckLine } from "react-icons/ri";
 import toast from "react-hot-toast";
 import { ErrorToast, SuccessToast } from "../../utils/toast";
+import { AuthContext } from "./AuthProvider";
 
 interface SignInModalProps {
   onClose: () => void;
@@ -13,6 +14,8 @@ const SignUpModal: FC<SignInModalProps> = ({ onClose }) => {
   const [firstName, setFirstname] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [password, setPassword] = useState("");
+  const { registerUser } = useContext(AuthContext);
+
   return (
     <div
       className="relative z-10"
@@ -86,7 +89,22 @@ const SignUpModal: FC<SignInModalProps> = ({ onClose }) => {
               </div>
             </div>
             <div
-              onClick={() => ErrorToast("Bienvenu parmis nous !")}
+              onClick={() => {
+                registerUser(
+                  {
+                    email,
+                    password,
+                    lastname: name,
+                    firstname: firstName,
+                    birthdate,
+                  },
+                  {
+                    onSuccess: () => {
+                      onClose();
+                    },
+                  }
+                );
+              }}
               className="bg-red-jalapeno text-white w-full text-center mt-2 py-4 cursor-pointer flex flex-row items-center justify-center space-x-2"
             >
               <RiTicket2Line size={20} />

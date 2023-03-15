@@ -1,5 +1,6 @@
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { RiLoginCircleLine, RiTicket2Line } from "react-icons/ri";
+import { AuthContext } from "./AuthProvider";
 
 interface SignInModalProps {
   onClose: () => void;
@@ -8,8 +9,14 @@ interface SignInModalProps {
 const SignInModal: FC<SignInModalProps> = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { loginUser, loading } = useContext(AuthContext);
   return (
-    <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div
+      className="relative z-10"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
       <div className="fixed inset-0 bg-black bg-opacity-75 transition-opacity"></div>
 
       <div className="fixed inset-0 overflow-y-auto" onClick={onClose}>
@@ -28,8 +35,8 @@ const SignInModal: FC<SignInModalProps> = ({ onClose }) => {
                 <div className="flex flex-col space-y-2">
                   <div className="text-3xl font-bold">Connexion</div>
                   <div>
-                    Connectez-vous pour participer aux concours et accéder aux concours auxquels
-                    vous avez participés !
+                    Connectez-vous pour participer aux concours et accéder aux
+                    concours auxquels vous avez participés !
                   </div>
                 </div>
               </div>
@@ -49,7 +56,16 @@ const SignInModal: FC<SignInModalProps> = ({ onClose }) => {
                 />
               </div>
             </div>
-            <div className="bg-red-jalapeno text-white w-full text-center mt-2 py-4 cursor-pointer flex flex-row items-center justify-center space-x-2">
+            <div
+              onClick={() => {
+                void loginUser(email, password, {
+                  onSuccess: () => {
+                    onClose();
+                  },
+                });
+              }}
+              className="bg-red-jalapeno text-white w-full text-center mt-2 py-4 cursor-pointer flex flex-row items-center justify-center space-x-2"
+            >
               <RiTicket2Line size={20} />
               <div className="font-medium">se connecter</div>
             </div>

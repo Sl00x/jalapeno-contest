@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { User } from '@prisma/client';
+import { PartsOfContests, User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -8,5 +8,21 @@ export class UserService {
 
   async findOne(username: string): Promise<User | undefined> {
     return this.prisma.user.findFirst({ where: { email: username } });
+  }
+
+  async findById(id: number): Promise<User | undefined> {
+    return this.prisma.user.findFirst({ where: { id } });
+  }
+
+  async getMyTicketsForContestId(
+    contestId: number,
+    userId: number,
+  ): Promise<PartsOfContests[] | undefined> {
+    return this.prisma.partsOfContests.findMany({
+      where: {
+        userId,
+        contestId,
+      },
+    });
   }
 }
