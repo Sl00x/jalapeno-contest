@@ -1,14 +1,18 @@
 import Contest from "../features/models/contest.model";
 
 export const getStep = (steps: Contest["steps"], participants: number) => {
-  let actualStepNumber = 1;
-  let actualStep = steps[0];
+  let actualStepNumber = 0;
 
-  for (const step of steps) {
+  const sortedSteps = [...steps].sort((a, b) => a.threshold - b.threshold);
+
+  for (const step of sortedSteps) {
     if (participants < step.threshold) break;
-    actualStep = step;
     actualStepNumber++;
   }
 
-  return { stepNumber: actualStepNumber, step: actualStep };
+  if (actualStepNumber >= sortedSteps.length) {
+    actualStepNumber = sortedSteps.length - 1;
+  }
+
+  return { stepNumber: actualStepNumber + 1, step: sortedSteps[actualStepNumber] };
 };

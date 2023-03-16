@@ -1,29 +1,17 @@
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import {
   useGetProfileQuery,
   useLoginMutation,
   useRegisterMutation,
 } from "../../features/api/auth-api";
 import User from "../../features/models/user.model";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import { ErrorToast, SuccessToast } from "../../utils/toast";
 
 interface AuthContextType {
-  user: User | null | undefined;
+  user: User | undefined;
   loading: boolean;
-  refreshUser: () => void;
-  loginUser: (
-    email: string,
-    password: string,
-    callback?: { onSuccess?: () => void }
-  ) => void;
+  refetch: () => void;
+  loginUser: (email: string, password: string, callback?: { onSuccess?: () => void }) => void;
   registerUser: (
     userInfos: {
       email: string;
@@ -37,35 +25,21 @@ interface AuthContextType {
   logout: () => void;
 }
 
-export const AuthContext = createContext<AuthContextType>(
-  {} as AuthContextType
-);
+export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-export const AuthProvider = ({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element => {
-  const [user, setUser] = useState<User | null>(null);
+export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element => {
+  const [token, setToken] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
   const [register] = useRegisterMutation();
   const [login] = useLoginMutation();
-  const { data: profile, refetch } = useGetProfileQuery();
+  const { data: user, refetch } = useGetProfileQuery(undefined, {
+    skip: token === undefined || token === "",
+  });
 
   useEffect(() => {
-    refetch();
+    const token = localStorage.getItem("authenticated");
+    setToken(token ?? undefined);
   }, []);
-
-  useEffect(() => {
-    if (profile) {
-      setUser(profile);
-    }
-  }, [profile]);
-
-  const refreshUser = () => {
-    refetch();
-    if (profile) setUser(profile);
-  };
 
   const loginUser = async (
     email: string,
@@ -84,13 +58,9 @@ export const AuthProvider = ({
     } else {
       //inform user about succes of login
       SuccessToast(`Bonjour, ${email}`);
-      localStorage.setItem(
-        "authenticated",
-        (response as { data: { access_token: string } }).data.access_token
-      );
-
-      //refetching data of user
-      refreshUser();
+      const token = (response as { data: { access_token: string } }).data.access_token;
+      localStorage.setItem("authenticated", token);
+      setToken(token);
 
       // add callback methods if whant to add some feature when login is success
       if (callback && callback.onSuccess) {
@@ -118,14 +88,8 @@ export const AuthProvider = ({
     if (response.hasOwnProperty("error")) {
       ErrorToast("Les informations rentrées sont invalide.");
     } else {
-      SuccessToast(
-        `Bienvenue parmis nous ${(response as { data: User }).data.email}`
-      );
-      await loginUser(
-        (response as { data: User }).data.email,
-        password,
-        callback
-      );
+      SuccessToast(`Bienvenue parmis nous ${(response as { data: User }).data.email}`);
+      await loginUser((response as { data: User }).data.email, password, callback);
     }
     setLoading(false);
   };
@@ -133,15 +97,15 @@ export const AuthProvider = ({
   const logout = async () => {
     setLoading(true);
     localStorage.removeItem("authenticated");
-    setUser(null);
+    setToken(undefined);
     setLoading(false);
   };
 
   const memoedValue = useMemo(
     () => ({
-      user,
+      user: token !== null && token !== "" ? user : undefined,
       loading,
-      refreshUser,
+      refetch,
       loginUser,
       registerUser,
       logout,
@@ -149,9 +113,7 @@ export const AuthProvider = ({
     [user, loading]
   );
 
-  return (
-    <AuthContext.Provider value={memoedValue}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={memoedValue}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

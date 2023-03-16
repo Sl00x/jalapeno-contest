@@ -25,4 +25,13 @@ export class UserService {
       },
     });
   }
+
+  async addAmount(amount: number, userId: number) {
+    const user = await this.findById(userId);
+
+    await this.prisma.user.update({
+      data: { balance: user.balance + amount },
+      where: { id: userId },
+    });
+  }
 }

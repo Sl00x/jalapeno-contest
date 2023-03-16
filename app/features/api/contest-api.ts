@@ -20,7 +20,7 @@ export const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });
 export const contestApi = createApi({
   reducerPath: "contestApi",
   baseQuery: baseQuery,
-  tagTypes: ["Contest", "Profile", "ProfileTickets"],
+  tagTypes: ["Contest"],
   endpoints: (builder) => ({
     getContests: builder.query<Contest[], void>({
       query: () => ({
@@ -28,16 +28,26 @@ export const contestApi = createApi({
         method: "GET",
         type: "application/json",
       }),
-      providesTags: ["Contest"],
+      providesTags: (result) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Contest" as const, id })), "Contest"]
+          : ["Contest"],
     }),
-
+    getContest: builder.query<Contest, number>({
+      query: (id: number) => ({
+        url: `/${id}`,
+        method: "GET",
+        type: "application/json",
+      }),
+      providesTags: (result, error, arg) => [{ type: "Contest", id: arg }],
+    }),
     participate: builder.mutation<Contest, number>({
       query: (id: number) => ({
         url: `/${id}/participate`,
         method: "POST",
         type: "application/json",
       }),
-      invalidatesTags: ["Contest", "Profile", "ProfileTickets"],
+      invalidatesTags: (result, error, arg) => [{ type: "Contest", id: arg }],
     }),
   }),
 });
@@ -46,4 +56,5 @@ export const {
   useGetContestsQuery,
   useLazyGetContestsQuery,
   useParticipateMutation,
+  useGetContestQuery,
 } = contestApi;

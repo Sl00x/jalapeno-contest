@@ -38,6 +38,34 @@ export class ContestService {
     });
   }
 
+  async getContest(id: number) {
+    return this.prisma.contest.findFirst({
+      include: {
+        steps: {
+          include: { prize: true },
+        },
+        winner: {
+          select: {
+            id: true,
+            email: true,
+            firstname: true,
+            lastname: true,
+          },
+        },
+        participants: {
+          include: {
+            user: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+      where: { steps: { some: {} }, id },
+    });
+  }
+
   async participate(contestId: Contest['id'], userId: User['id']) {
     const contest = await this.prisma.contest.findFirst({
       where: { id: contestId },

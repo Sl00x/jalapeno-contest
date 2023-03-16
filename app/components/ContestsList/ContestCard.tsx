@@ -1,11 +1,9 @@
-import { FC, useContext } from "react";
+import { FC } from "react";
 import TimeAgo from "javascript-time-ago";
 import clsx from "clsx";
 import { RiUser2Line } from "react-icons/ri";
 import { getStep } from "../../utils/contest";
 import Contest from "../../features/models/contest.model";
-import { useParticipateMutation } from "../../features/api/contest-api";
-import { AuthContext } from "../Auth/AuthProvider";
 
 interface ContestCardProps {
   contest: Contest;
@@ -29,10 +27,7 @@ const ContestCard: FC<ContestCardProps> = ({ contest, onClick }) => {
       <div className="px-8 flex flex-col space-y-4">
         <div className="text-2xl text-center">{contest.name}</div>
         <div className="flex w-full items-center justify-center">
-          <img
-            src={step.prize.image_url}
-            className="max-w-[200px] max-h-[200px] h-[200px]"
-          />
+          <img src={step.prize.image_url} className="max-w-[200px] max-h-[200px] h-[200px]" />
         </div>
         <div
           className={clsx(
@@ -41,7 +36,7 @@ const ContestCard: FC<ContestCardProps> = ({ contest, onClick }) => {
           )}
         >
           <div className="text-black/50 text-sm">fin {timeLeft}</div>
-          <div className="font-normal text-xl">7€</div>
+          <div className="font-normal text-xl">{contest.price}€</div>
         </div>
       </div>
       {hasBegan && (

@@ -4,17 +4,17 @@ import ContestCard from "./ContestCard";
 
 interface ContestsListProps {
   contests: Contest[];
-  onSelectContest: (contest: Contest) => void;
+  onSelectContestId: (contestId: Contest["id"]) => void;
 }
 
-const ContestsList: FC<ContestsListProps> = ({ contests, onSelectContest }) => {
+const ContestsList: FC<ContestsListProps> = ({ contests, onSelectContestId }) => {
   return (
     <div className="flex flex-row space-x-4">
       {contests.map((contest) => (
         <ContestCard
           key={contest.id}
           contest={contest}
-          onClick={() => onSelectContest(contest)}
+          onClick={() => onSelectContestId(contest.id)}
         />
       ))}
     </div>

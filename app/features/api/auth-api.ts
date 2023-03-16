@@ -38,10 +38,7 @@ export const authApi = createApi({
         body,
       }),
     }),
-    login: builder.mutation<
-      { access_token: string },
-      { email: string; password: string }
-    >({
+    login: builder.mutation<{ access_token: string }, { email: string; password: string }>({
       query: (body) => ({
         url: "/login",
         method: "POST",
@@ -52,5 +49,4 @@ export const authApi = createApi({
   }),
 });
 
-export const { useGetProfileQuery, useLoginMutation, useRegisterMutation } =
-  authApi;
+export const { useGetProfileQuery, useLoginMutation, useRegisterMutation } = authApi;

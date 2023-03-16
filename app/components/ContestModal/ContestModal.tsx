@@ -3,34 +3,39 @@ import { RiGiftLine, RiListCheck, RiTicket2Line } from "react-icons/ri";
 import Contest from "../../features/models/contest.model";
 import { getStep } from "../../utils/contest";
 import ContestSteps from "./ContestSteps";
-import { useParticipateMutation } from "../../features/api/contest-api";
+import { useGetContestQuery, useParticipateMutation } from "../../features/api/contest-api";
 import { AuthContext } from "../Auth/AuthProvider";
 import { SuccessToast } from "../../utils/toast";
+import clsx from "clsx";
 
 interface ContestModalProps {
-  contest: Contest;
+  contestId: Contest["id"];
   onClose: () => void;
 }
 
-const ContestModal: FC<ContestModalProps> = ({ contest, onClose }) => {
-  const { stepNumber } = getStep(contest.steps, contest.participants.length);
+const ContestModal: FC<ContestModalProps> = ({ contestId, onClose }) => {
+  const { data: contest } = useGetContestQuery(contestId);
+
   const [participate] = useParticipateMutation();
-  const { user, refreshUser } = useContext(AuthContext);
-  // const tickets = contest.participants.filter(({user: {id}}) => id === user.id).length
-  const tickets = 0;
+  const { user, refetch } = useContext(AuthContext);
+
+  if (!contest) {
+    return null;
+  }
+
+  const { stepNumber } = getStep(contest.steps, contest.participants.length);
+  const tickets = contest.participants.filter(({ user: { id } }) => id === user?.id).length;
 
   const handleParticipate = async () => {
     await participate(contest.id);
     SuccessToast(`Vous venez de prendre un ticket pour ${contest.name}`);
-    refreshUser();
+    refetch();
   };
+
+  const canBuyTicket = (user?.balance ?? 0) >= contest.price;
+
   return (
-    <div
-      className="relative z-10"
-      aria-labelledby="modal-title"
-      role="dialog"
-      aria-modal="true"
-    >
+    <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="fixed inset-0 bg-black bg-opacity-75 transition-opacity"></div>
       <div className="fixed inset-0 overflow-y-auto" onClick={onClose}>
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
@@ -61,41 +66,33 @@ const ContestModal: FC<ContestModalProps> = ({ contest, onClose }) => {
                       <RiTicket2Line />
                       <div>
                         Mes tickets:{" "}
-                        <span className="text-red-jalapeno font-medium">
-                          {tickets}
-                        </span>
+                        <span className="text-red-jalapeno font-medium">{tickets}</span>
                       </div>
                     </div>
                   </div>
                   <div className="text-black/50 text-xs max-h-20 overflow-y-auto">
                     {contest.description}
                   </div>
-                  {(user?.balance as number) < contest.price && (
-                    <div className="w-full bg-red-jalapeno-light/20 text-xs p-4 text-red-jalapeno-dark">
-                      <b>Attention !</b>{" "}
-                      {"vous n'avez pas assez de fond dans votre balance."}
-                    </div>
-                  )}
                 </div>
               </div>
               <div className="mt-4">
-                <ContestSteps
-                  steps={contest.steps}
-                  participants={contest.participants.length}
-                />
+                <ContestSteps steps={contest.steps} participants={contest.participants.length} />
               </div>
             </div>
-            {(user?.balance as number) >= contest.price && (
-              <div
-                onClick={() => handleParticipate()}
-                className="bg-red-jalapeno text-white w-full text-center mt-2 py-4 cursor-pointer flex flex-row items-center justify-center space-x-2"
-              >
-                <RiTicket2Line size={20} />
-                <div className="font-medium">
-                  Acheter un ticket pour {contest.price}€
-                </div>
+            <div
+              onClick={() => canBuyTicket && handleParticipate()}
+              className={clsx(
+                "w-full text-center mt-2 py-4 flex flex-row items-center justify-center space-x-2",
+                canBuyTicket
+                  ? "bg-red-jalapeno text-white cursor-pointer"
+                  : "bg-gray-200 text-gray-600"
+              )}
+            >
+              <RiTicket2Line size={20} />
+              <div className="font-medium">
+                {canBuyTicket ? `Acheter un ticket pour ${contest.price}€` : "Fonds insuffisants"}
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>

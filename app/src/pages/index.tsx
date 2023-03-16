@@ -7,7 +7,7 @@ import { useGetContestsQuery } from "../../features/api/contest-api";
 import Contest from "../../features/models/contest.model";
 
 export default function Home() {
-  const [selectedContest, setSelectedContest] = useState<Contest>();
+  const [selectedContestId, setSelectedContestId] = useState<Contest["id"]>();
 
   const { data: contests } = useGetContestsQuery();
 
@@ -18,13 +18,16 @@ export default function Home() {
         <div className="py-5">
           <ListTitle title="Top concours" />
         </div>
-        <ContestsList contests={contests ?? []} onSelectContest={setSelectedContest} />
+        <ContestsList contests={contests ?? []} onSelectContestId={setSelectedContestId} />
         <div className="py-5">
           <ListTitle title="Concours terminés" />
         </div>
       </div>
-      {selectedContest && (
-        <ContestModal contest={selectedContest} onClose={() => setSelectedContest(undefined)} />
+      {selectedContestId && (
+        <ContestModal
+          contestId={selectedContestId}
+          onClose={() => setSelectedContestId(undefined)}
+        />
       )}
     </div>
   );

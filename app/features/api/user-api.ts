@@ -1,9 +1,7 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
-import Contest from "../models/contest.model";
-import { AnyARecord } from "dns";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "/api/contest",
+  baseUrl: "/api/user",
   mode: "cors",
   prepareHeaders: (headers, { getState }) => {
     if (localStorage.getItem("authenticated")) {
@@ -31,7 +29,15 @@ export const userApi = createApi({
       }),
       providesTags: ["ProfileTickets"],
     }),
+    refund: builder.mutation<void, { amount: number }>({
+      query: (body) => ({
+        url: `/refund`,
+        method: "PUT",
+        type: "application/json",
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetTicketForContestQuery } = userApi;
+export const { useGetTicketForContestQuery, useRefundMutation } = userApi;

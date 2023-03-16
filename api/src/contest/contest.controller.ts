@@ -14,8 +14,13 @@ export class ContestController {
   constructor(private readonly contestService: ContestService) {}
 
   @Get('')
-  async signupUser() {
+  async getContests() {
     return this.contestService.getContests();
+  }
+
+  @Get(':id')
+  async getContest(@Param() params) {
+    return this.contestService.getContest(+params.id);
   }
 
   @UseGuards(JwtAuthGuard)
