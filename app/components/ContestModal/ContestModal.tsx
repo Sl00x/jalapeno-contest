@@ -62,13 +62,15 @@ const ContestModal: FC<ContestModalProps> = ({ contestId, onClose }) => {
                         </span>
                       </div>
                     </div>
-                    <div className="flex flex-row items-center space-x-2">
-                      <RiTicket2Line />
-                      <div>
-                        Mes tickets:{" "}
-                        <span className="text-red-jalapeno font-medium">{tickets}</span>
+                    {user !== undefined && (
+                      <div className="flex flex-row items-center space-x-2">
+                        <RiTicket2Line />
+                        <div>
+                          Mes tickets:{" "}
+                          <span className="text-red-jalapeno font-medium">{tickets}</span>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                   <div className="text-black/50 text-xs max-h-20 overflow-y-auto">
                     {contest.description}
@@ -79,20 +81,22 @@ const ContestModal: FC<ContestModalProps> = ({ contestId, onClose }) => {
                 <ContestSteps steps={contest.steps} participants={contest.participants.length} />
               </div>
             </div>
-            <div
-              onClick={() => canBuyTicket && handleParticipate()}
-              className={clsx(
-                "w-full text-center mt-2 py-4 flex flex-row items-center justify-center space-x-2",
-                canBuyTicket
-                  ? "bg-red-jalapeno text-white cursor-pointer"
-                  : "bg-gray-200 text-gray-600"
-              )}
-            >
-              <RiTicket2Line size={20} />
-              <div className="font-medium">
-                {canBuyTicket ? `Acheter un ticket pour ${contest.price}€` : "Fonds insuffisants"}
+            {user !== undefined && (
+              <div
+                onClick={() => canBuyTicket && handleParticipate()}
+                className={clsx(
+                  "w-full text-center mt-2 py-4 flex flex-row items-center justify-center space-x-2",
+                  canBuyTicket
+                    ? "bg-red-jalapeno text-white cursor-pointer"
+                    : "bg-gray-200 text-gray-600"
+                )}
+              >
+                <RiTicket2Line size={20} />
+                <div className="font-medium">
+                  {canBuyTicket ? `Acheter un ticket pour ${contest.price}€` : "Fonds insuffisants"}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
