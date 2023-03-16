@@ -17,8 +17,8 @@ export default interface Contest {
   id: number;
   name: string;
   description: string;
-  startAt: Date;
-  endAt: Date;
+  startAt: string;
+  endAt: string;
   price: number;
   winner: User | null;
   steps: Step[];

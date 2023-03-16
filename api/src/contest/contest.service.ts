@@ -38,6 +38,53 @@ export class ContestService {
     });
   }
 
+  async getContestEndSoon() {
+    const contests = await this.prisma.contest.findMany({
+      include: {
+        steps: {
+          include: { prize: true },
+        },
+        winner: {
+          select: {
+            id: true,
+            email: true,
+            firstname: true,
+            lastname: true,
+          },
+        },
+        participants: {
+          include: {
+            user: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+      where: {
+        steps: {
+          some: {},
+        },
+        startAt: { lte: new Date() },
+        endAt: { gte: new Date() },
+      },
+    });
+
+    let lastContest: Contest = null;
+    let lastContestThreshold = 0;
+    for (const contest of contests) {
+      const total = contest.endAt.getTime() - contest.startAt.getTime();
+      const progress = contest.endAt.getTime() - new Date().getTime();
+      const result = 100 - (progress * 100) / total;
+      if (result >= lastContestThreshold) {
+        lastContestThreshold = result;
+        lastContest = contest;
+      }
+    }
+    return lastContest;
+  }
+
   async getContest(id: number) {
     return this.prisma.contest.findFirst({
       include: {

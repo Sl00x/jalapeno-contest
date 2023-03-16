@@ -23,11 +23,17 @@ const ContestCard: FC<ContestCardProps> = ({ contest, onClick }) => {
   const percent = Math.min((participants * 100) / step.threshold, 100);
 
   return (
-    <div className="bg-gray-light pt-4 cursor-pointer" onClick={onClick}>
+    <div
+      className="bg-gray-light w-[450px] shadow-md max-w-[450px] pt-4 cursor-pointer"
+      onClick={onClick}
+    >
       <div className="px-8 flex flex-col space-y-4">
         <div className="text-2xl text-center">{contest.name}</div>
         <div className="flex w-full items-center justify-center">
-          <img src={step.prize.image_url} className="max-w-[200px] max-h-[200px] h-[200px]" />
+          <img
+            src={step.prize.image_url}
+            className="max-w-[200px] max-h-[200px] h-[200px]"
+          />
         </div>
         <div
           className={clsx(

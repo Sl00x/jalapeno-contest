@@ -13,7 +13,8 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { paypalCardLogo, paypalLogo } from "../../constants/paypal.conts";
 
 const initialOptions = {
-  "client-id": "AU0awvBN6LL7DE6jbfYTMtmqRXOwkJ6qnWniFEwhIdlBxIMNGb4XtoxmHE6mDMkvycY2X_oMH0doYrW9",
+  "client-id":
+    "AU0awvBN6LL7DE6jbfYTMtmqRXOwkJ6qnWniFEwhIdlBxIMNGb4XtoxmHE6mDMkvycY2X_oMH0doYrW9",
   currency: "EUR",
   intent: "capture",
 };
@@ -60,7 +61,9 @@ const PaypalButtons: FC<PBProps> = ({ amount }) => {
             if (!actions?.order) return;
             return actions.order.capture().then((details) => {
               if (!details || details.status !== "COMPLETED")
-                return ErrorToast("Une erreur est survenue durant la transaction");
+                return ErrorToast(
+                  "Une erreur est survenue durant la transaction"
+                );
               const total = details.purchase_units
                 .map(({ amount }) => +amount.value)
                 .reduce((total, actual) => total + actual);
@@ -92,7 +95,12 @@ const PaymentModal: FC<Props> = ({ onClose }) => {
 
   if (!user) return null;
   return (
-    <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div
+      className="relative z-10"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
       <div className="fixed inset-0 bg-black bg-opacity-75 transition-opacity"></div>
 
       <div className="fixed inset-0 overflow-y-auto" onClick={onClose}>
@@ -105,14 +113,19 @@ const PaymentModal: FC<Props> = ({ onClose }) => {
               <div className="flex flex-row space-x-6">
                 <div>
                   <div className="bg-gray-light p-5">
-                    <RiMoneyEuroCircleLine className="text-gray-darker" size={50} />
+                    <RiMoneyEuroCircleLine
+                      className="text-gray-darker"
+                      size={50}
+                    />
                   </div>
                 </div>
                 <div className="flex-1 flex flex-col space-y-2">
                   <div className="text-3xl font-bold mb-8">Mes fonds</div>
                   <div className="p-4 bg-red-jalapeno text-white flex flex-row items-center justify-between">
                     <div className="flex flex-col justify-between">
-                      <div className="text-4xl font-medium">{user.balance.toFixed(2)}</div>
+                      <div className="text-4xl font-medium">
+                        {user.balance.toFixed(2)}
+                      </div>
                       <div>Balance actuelle</div>
                     </div>
                     <div>

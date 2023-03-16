@@ -1,6 +1,10 @@
 import { FC } from "react";
 import { RiSearchLine } from "react-icons/ri";
 
+interface Props {
+  onSearch?: (value: string) => void;
+}
+
 const SearchBar: FC = () => {
   return (
     <div className="w-full border-b border-black/[0.025] bg-black/[0.025] flex flex-row items-center gap-2 p-2">

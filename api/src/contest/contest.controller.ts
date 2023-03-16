@@ -18,8 +18,14 @@ export class ContestController {
     return this.contestService.getContests();
   }
 
+  @Get('soon')
+  async getContestEndSoon() {
+    return this.contestService.getContestEndSoon();
+  }
+
   @Get(':id')
   async getContest(@Param() params) {
+    console.log('coucou id');
     return this.contestService.getContest(+params.id);
   }
 

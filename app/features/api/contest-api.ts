@@ -30,7 +30,10 @@ export const contestApi = createApi({
       }),
       providesTags: (result) =>
         result
-          ? [...result.map(({ id }) => ({ type: "Contest" as const, id })), "Contest"]
+          ? [
+              ...result.map(({ id }) => ({ type: "Contest" as const, id })),
+              "Contest",
+            ]
           : ["Contest"],
     }),
     getContest: builder.query<Contest, number>({
@@ -41,6 +44,18 @@ export const contestApi = createApi({
       }),
       providesTags: (result, error, arg) => [{ type: "Contest", id: arg }],
     }),
+
+    getContestEndSoon: builder.query<Contest, void>({
+      query: () => ({
+        url: `/soon`,
+        method: "GET",
+        type: "application/json",
+      }),
+      providesTags: (result, error, arg) => [
+        { type: "Contest", id: result?.id },
+      ],
+    }),
+
     participate: builder.mutation<Contest, number>({
       query: (id: number) => ({
         url: `/${id}/participate`,
@@ -57,4 +72,5 @@ export const {
   useLazyGetContestsQuery,
   useParticipateMutation,
   useGetContestQuery,
+  useGetContestEndSoonQuery,
 } = contestApi;
