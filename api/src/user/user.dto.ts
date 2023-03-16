@@ -1,7 +1,14 @@
-import { IsDateString, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import {
+  IsDateString,
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class UserCreateInput {
   @IsString()
+  @IsEmail()
   @IsNotEmpty()
   @MaxLength(255)
   email: string;
@@ -23,4 +30,6 @@ export class UserCreateInput {
   @IsString()
   @IsNotEmpty()
   password: string;
+
+  referrerCode?: string | null;
 }

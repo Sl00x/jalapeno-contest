@@ -33,5 +33,17 @@ export class UserService {
       data: { balance: user.balance + amount },
       where: { id: userId },
     });
+
+    if (user.referrerCode) {
+      const referrer = await this.prisma.user.findFirst({
+        where: { referralCode: user.referrerCode },
+      });
+      if (referrer) {
+        await this.prisma.user.update({
+          data: { balance: referrer.balance + amount * 0.1 },
+          where: { id: referrer.id },
+        });
+      }
+    }
   }
 }

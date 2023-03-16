@@ -30,6 +30,8 @@ model User {
   password        String
   balance         Float     @default(0)
   birthdate       DateTime
+  referralCode    String    @default(uuid())
+  referrerCode    String?
   createdAt       DateTime  @default(now())
   deleteAt        DateTime?
 

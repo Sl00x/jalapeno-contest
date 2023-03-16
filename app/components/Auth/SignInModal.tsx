@@ -7,8 +7,8 @@ interface SignInModalProps {
 }
 
 const SignInModal: FC<SignInModalProps> = ({ onClose }) => {
-  const [email, setEmail] = useState("benjamin.rousseliere@gmail.com");
-  const [password, setPassword] = useState("testtest");
+  const [email, setEmail] = useState("test@test.com");
+  const [password, setPassword] = useState("aaa");
   const { loginUser, loading } = useContext(AuthContext);
   return (
     <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">

@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
-import { RiMoneyEuroCircleLine } from "react-icons/ri";
+import { RiFileCopy2Line, RiMoneyEuroCircleLine } from "react-icons/ri";
+import { SuccessToast } from "../../utils/toast";
 import { AuthContext } from "../Auth/AuthProvider";
 import PaymentModal from "./PaymentModal";
 
@@ -8,10 +9,22 @@ export const ProfilBox: React.FC = () => {
 
   const { user, logout } = useContext(AuthContext);
 
+  const handleCodeCopy = () => {
+    navigator.clipboard.writeText(user?.referralCode ?? "");
+    SuccessToast("Code parrainage copié");
+  };
+
   return (
     <div className="border-t border-white/5 p-4">
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-col">
+          <div
+            className="text-white cursor-pointer flex flex-row items-center space-x-1"
+            onClick={handleCodeCopy}
+          >
+            <div>Code parrainage</div>
+            <RiFileCopy2Line />
+          </div>
           <span className="text-white font-semibold text-sm">{`${user?.firstname} ${user?.lastname}`}</span>
           <span onClick={() => logout()} className="text-white/50  text-sm cursor-pointer">
             Se déconnecter

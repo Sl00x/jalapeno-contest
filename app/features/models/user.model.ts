@@ -5,4 +5,5 @@ export default interface User {
   lastname: string;
   birthdate: string;
   balance: number;
+  referralCode: string;
 }

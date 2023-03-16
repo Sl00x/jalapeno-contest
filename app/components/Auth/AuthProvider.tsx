@@ -19,6 +19,7 @@ interface AuthContextType {
       lastname: string;
       firstname: string;
       birthdate: string;
+      referrerCode?: string;
     },
     callback?: { onSuccess?: () => void }
   ) => void;
@@ -28,18 +29,15 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element => {
-  const [token, setToken] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [user, setUser] = useState<User>();
   const [register] = useRegisterMutation();
   const [login] = useLoginMutation();
-  const { data: user, refetch } = useGetProfileQuery(undefined, {
-    skip: token === undefined || token === "",
-  });
+  const { data, refetch } = useGetProfileQuery();
 
   useEffect(() => {
-    const token = localStorage.getItem("authenticated");
-    setToken(token ?? undefined);
-  }, []);
+    setUser(data);
+  }, [data]);
 
   const loginUser = async (
     email: string,
@@ -60,7 +58,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
       SuccessToast(`Bonjour, ${email}`);
       const token = (response as { data: { access_token: string } }).data.access_token;
       localStorage.setItem("authenticated", token);
-      setToken(token);
+      refetch();
+      setUser(data);
 
       // add callback methods if whant to add some feature when login is success
       if (callback && callback.onSuccess) {
@@ -77,6 +76,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
       lastname: string;
       firstname: string;
       birthdate: string;
+      referrerCode?: string;
     },
     callback?: {
       onSuccess?: () => void;
@@ -97,13 +97,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
   const logout = async () => {
     setLoading(true);
     localStorage.removeItem("authenticated");
-    setToken(undefined);
+    setUser(undefined);
     setLoading(false);
   };
 
   const memoedValue = useMemo(
     () => ({
-      user: token !== null && token !== "" ? user : undefined,
+      user,
       loading,
       refetch,
       loginUser,

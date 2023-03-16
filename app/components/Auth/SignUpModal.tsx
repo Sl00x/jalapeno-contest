@@ -1,7 +1,5 @@
-import { FC, useContext, useEffect, useState } from "react";
-import { RiRegisteredLine, RiTicket2Line, RiCheckLine } from "react-icons/ri";
-import toast from "react-hot-toast";
-import { ErrorToast, SuccessToast } from "../../utils/toast";
+import { FC, useContext, useState } from "react";
+import { RiRegisteredLine, RiTicket2Line } from "react-icons/ri";
 import { AuthContext } from "./AuthProvider";
 
 interface SignInModalProps {
@@ -14,15 +12,11 @@ const SignUpModal: FC<SignInModalProps> = ({ onClose }) => {
   const [firstName, setFirstname] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [password, setPassword] = useState("");
+  const [referrerCode, setReferrerCode] = useState("");
   const { registerUser } = useContext(AuthContext);
 
   return (
-    <div
-      className="relative z-10"
-      aria-labelledby="modal-title"
-      role="dialog"
-      aria-modal="true"
-    >
+    <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="fixed inset-0 bg-black bg-opacity-75 transition-opacity"></div>
 
       <div className="fixed inset-0 overflow-y-auto" onClick={onClose}>
@@ -41,13 +35,13 @@ const SignUpModal: FC<SignInModalProps> = ({ onClose }) => {
                 <div className="flex flex-col space-y-2">
                   <div className="text-3xl font-bold">Inscription</div>
                   <div>
-                    Inscrivez-vous pour pouvoir participer aux différents
-                    concours. {"Ils n'attendent que vous !"}
+                    Inscrivez-vous pour pouvoir participer aux différents concours.{" "}
+                    {"Ils n'attendent que vous !"}
                   </div>
                 </div>
               </div>
               <div className="mt-4 w-full flex flex-col">
-                <label className="text-black/40 mb-1">Adresse e-mail</label>
+                <label className="text-black/40 mb-1">Adresse e-mail *</label>
                 <input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -56,7 +50,7 @@ const SignUpModal: FC<SignInModalProps> = ({ onClose }) => {
 
                 <div className="flex flex-row space-x-2">
                   <div className="flex flex-col w-full">
-                    <label className="text-black/40 mb-1">Nom</label>
+                    <label className="text-black/40 mb-1">Nom *</label>
                     <input
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -64,7 +58,7 @@ const SignUpModal: FC<SignInModalProps> = ({ onClose }) => {
                     />
                   </div>
                   <div className="flex flex-col w-full">
-                    <label className="text-black/40 mb-1">Prénom</label>
+                    <label className="text-black/40 mb-1">Prénom *</label>
                     <input
                       value={firstName}
                       onChange={(e) => setFirstname(e.target.value)}
@@ -72,18 +66,24 @@ const SignUpModal: FC<SignInModalProps> = ({ onClose }) => {
                     />
                   </div>
                 </div>
-                <label className="text-black/40 mb-1">Date de naissance</label>
+                <label className="text-black/40 mb-1">Date de naissance *</label>
                 <input
                   value={birthdate}
                   onChange={(e) => setBirthdate(e.target.value)}
                   type="date"
                   className="w-full px-2 py-1 border border-black/5 outline-none focus:outline-1 focus:outline-red-jalapeno mb-4"
                 />
-                <label className="text-black/40 mb-1">Mot de passe</label>
+                <label className="text-black/40 mb-1">Mot de passe *</label>
                 <input
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   type="password"
+                  className="w-full px-2 py-1 border border-black/5 outline-none focus:outline-1 focus:outline-red-jalapeno"
+                />
+                <label className="text-black/40 mb-1 mt-2">Code de parrainage</label>
+                <input
+                  value={referrerCode}
+                  onChange={(e) => setReferrerCode(e.target.value)}
                   className="w-full px-2 py-1 border border-black/5 outline-none focus:outline-1 focus:outline-red-jalapeno"
                 />
               </div>
@@ -97,6 +97,7 @@ const SignUpModal: FC<SignInModalProps> = ({ onClose }) => {
                     lastname: name,
                     firstname: firstName,
                     birthdate,
+                    referrerCode: referrerCode === "" ? undefined : referrerCode,
                   },
                   {
                     onSuccess: () => {

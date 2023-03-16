@@ -8,6 +8,7 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -46,17 +47,24 @@ export class AuthService {
     };
   }
 
-  async getUser(user: any) {
-    return await this.userService.findById(user.id);
+  async getUser(userId: number) {
+    return await this.userService.findById(userId);
   }
 
   async createUser(data: Prisma.UserCreateInput) {
+    if (data.referrerCode) {
+      await this.prisma.user.findFirstOrThrow({
+        where: { referralCode: data.referrerCode },
+      });
+    }
+
     const { password, ...user } = await this.prisma.user
       .create({
         data: {
           ...data,
           password: await bcrypt.hash(data.password, 10),
           birthdate: new Date(data.birthdate),
+          referralCode: randomUUID(),
         },
       })
       .catch((error) => {
