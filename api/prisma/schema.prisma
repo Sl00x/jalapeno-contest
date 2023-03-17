@@ -75,3 +75,12 @@ model PartsOfContests {
   createdAt     DateTime  @default(now())
   deleteAt      DateTime?
 }
+
+model Transaction {
+  id        Int     @default(autoincrement()) @id
+  orderId   String
+  status    String
+  amount    Float     @default(0)
+  createdAt     DateTime  @default(now())
+  deleteAt      DateTime?
+}
