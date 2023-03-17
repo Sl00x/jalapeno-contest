@@ -31,6 +31,7 @@ export default function MyContests() {
         <div>
           <ContestsList
             contests={contests?.filter((contest) => new Date(contest.endAt) <= new Date()) ?? []}
+            onSelectContestId={setSelectedContestId}
           />
         </div>
       </div>
