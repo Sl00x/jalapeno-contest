@@ -7,6 +7,7 @@ import { useGetContestQuery, useParticipateMutation } from "../../features/api/c
 import { AuthContext } from "../Auth/AuthProvider";
 import { SuccessToast } from "../../utils/toast";
 import clsx from "clsx";
+import ContestModalButton from "./ContestModalButton";
 
 interface ContestModalProps {
   contestId: Contest["id"];
@@ -31,8 +32,6 @@ const ContestModal: FC<ContestModalProps> = ({ contestId, onClose }) => {
     SuccessToast(`Vous venez de prendre un ticket pour ${contest.name}`);
     refetch();
   };
-
-  const canBuyTicket = (user?.balance ?? 0) >= contest.price;
 
   return (
     <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -82,20 +81,7 @@ const ContestModal: FC<ContestModalProps> = ({ contestId, onClose }) => {
               </div>
             </div>
             {user !== undefined && (
-              <div
-                onClick={() => canBuyTicket && handleParticipate()}
-                className={clsx(
-                  "w-full text-center mt-2 py-4 flex flex-row items-center justify-center space-x-2",
-                  canBuyTicket
-                    ? "bg-red-jalapeno text-white cursor-pointer"
-                    : "bg-gray-200 text-gray-600"
-                )}
-              >
-                <RiTicket2Line size={20} />
-                <div className="font-medium">
-                  {canBuyTicket ? `Acheter un ticket pour ${contest.price}€` : "Fonds insuffisants"}
-                </div>
-              </div>
+              <ContestModalButton contest={contest} onClick={handleParticipate} />
             )}
           </div>
         </div>

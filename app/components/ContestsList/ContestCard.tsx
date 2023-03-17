@@ -17,8 +17,10 @@ const ContestCard: FC<ContestCardProps> = ({ contest, onClick }) => {
   const { step } = getStep(contest.steps, participants);
   const startAt = new Date(contest.startAt);
   const endAt = new Date(contest.endAt);
-  const timeLeft = timeAgo.format(endAt);
   const hasBegan = startAt <= new Date();
+  const isDone = endAt <= new Date();
+  const timeLeftPrefix = hasBegan ? (isDone ? "Terminé" : "Fin") : "Commence";
+  const timeLeft = timeAgo.format(endAt);
 
   const percent = Math.min((participants * 100) / step.threshold, 100);
 
@@ -30,10 +32,7 @@ const ContestCard: FC<ContestCardProps> = ({ contest, onClick }) => {
       <div className="px-8 flex flex-col space-y-4">
         <div className="text-2xl text-center">{contest.name}</div>
         <div className="flex w-full items-center justify-center">
-          <img
-            src={step.prize.image_url}
-            className="max-w-[200px] max-h-[200px] h-[200px]"
-          />
+          <img src={step.prize.image_url} className="max-w-[200px] max-h-[200px] h-[200px]" />
         </div>
         <div
           className={clsx(
@@ -41,11 +40,13 @@ const ContestCard: FC<ContestCardProps> = ({ contest, onClick }) => {
             hasBegan ? "" : "pb-4"
           )}
         >
-          <div className="text-black/50 text-sm">fin {timeLeft}</div>
+          <div className="text-black/50 text-sm">
+            {timeLeftPrefix} {timeLeft}
+          </div>
           <div className="font-normal text-xl">{contest.price}€</div>
         </div>
       </div>
-      {hasBegan && (
+      {hasBegan && !isDone && (
         <div>
           <div className="flex flex-row justify-end mr-2">
             <div className="px-2 py-1 bg-red-jalapeno-lighter rounded-full flex flex-row justify-between items-center space-x-1">

@@ -5,8 +5,7 @@ import { Layout } from "../../components/Layout/Layout";
 import { RootStore } from "../../features/store/root-store";
 import TimeAgo from "javascript-time-ago";
 import fr from "javascript-time-ago/locale/fr.json";
-import { toast, Toaster, ToastBar } from "react-hot-toast";
-import { RiCloseLine } from "react-icons/ri";
+import { Toaster, ToastBar } from "react-hot-toast";
 import { AuthProvider } from "../../components/Auth/AuthProvider";
 
 TimeAgo.addLocale(fr);

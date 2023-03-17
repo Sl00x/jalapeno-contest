@@ -22,18 +22,26 @@ export const contestApi = createApi({
   baseQuery: baseQuery,
   tagTypes: ["Contest"],
   endpoints: (builder) => ({
-    getContests: builder.query<Contest[], void>({
-      query: () => ({
-        url: "",
+    getContests: builder.query<Contest[], string | undefined>({
+      query: (query) => ({
+        url: "" + (query ? `?query=${query}` : ""),
         method: "GET",
         type: "application/json",
       }),
       providesTags: (result) =>
         result
-          ? [
-              ...result.map(({ id }) => ({ type: "Contest" as const, id })),
-              "Contest",
-            ]
+          ? [...result.map(({ id }) => ({ type: "Contest" as const, id })), "Contest"]
+          : ["Contest"],
+    }),
+    getSelfContests: builder.query<Contest[], void>({
+      query: () => ({
+        url: "/self",
+        method: "GET",
+        type: "application/json",
+      }),
+      providesTags: (result) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Contest" as const, id })), "Contest"]
           : ["Contest"],
     }),
     getContest: builder.query<Contest, number>({
@@ -51,9 +59,7 @@ export const contestApi = createApi({
         method: "GET",
         type: "application/json",
       }),
-      providesTags: (result, error, arg) => [
-        { type: "Contest", id: result?.id },
-      ],
+      providesTags: (result, error, arg) => [{ type: "Contest", id: result?.id }],
     }),
 
     participate: builder.mutation<Contest, number>({
@@ -73,4 +79,5 @@ export const {
   useParticipateMutation,
   useGetContestQuery,
   useGetContestEndSoonQuery,
+  useGetSelfContestsQuery,
 } = contestApi;

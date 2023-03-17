@@ -10,7 +10,20 @@ import { Contest, User } from '@prisma/client';
 export class ContestService {
   constructor(private prisma: PrismaService) {}
 
-  async getContests() {
+  async getContests(query?: string) {
+    const fullSearch: any = query
+      ? {
+          OR: [
+            {
+              name: { contains: query, mode: 'insensitive' },
+            },
+            {
+              description: { contains: query, mode: 'insensitive' },
+            },
+          ],
+        }
+      : {};
+
     return this.prisma.contest.findMany({
       include: {
         steps: {
@@ -34,7 +47,40 @@ export class ContestService {
           },
         },
       },
-      where: { steps: { some: {} } },
+      where: {
+        steps: {
+          some: {},
+        },
+        ...fullSearch,
+      },
+    });
+  }
+
+  async getSelfContests(userId: User['id']) {
+    return this.prisma.contest.findMany({
+      include: {
+        steps: {
+          include: { prize: true },
+        },
+        winner: {
+          select: {
+            id: true,
+            email: true,
+            firstname: true,
+            lastname: true,
+          },
+        },
+        participants: {
+          include: {
+            user: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+      where: { steps: { some: {} }, participants: { some: { userId } } },
     });
   }
 

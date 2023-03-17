@@ -7,6 +7,7 @@ import SignInModal from "../Auth/SignInModal";
 import SignUpModal from "../Auth/SignUpModal";
 import { AuthContext } from "../Auth/AuthProvider";
 import { ProfilBox } from "./ProfilBox";
+import clsx from "clsx";
 
 interface Props {
   children?: ReactElement | ReactElement[];
@@ -25,12 +26,8 @@ export const Layout: React.FC<Props> = ({ children }) => {
 
   return (
     <div className="relative w-screen h-screen bg-white flex fex-row overflow-x-hidden">
-      {showLoginModal && (
-        <SignInModal onClose={() => setShowLoginModal(false)} />
-      )}
-      {showRegisterModal && (
-        <SignUpModal onClose={() => setShowRegisterModal(false)} />
-      )}
+      {showLoginModal && <SignInModal onClose={() => setShowLoginModal(false)} />}
+      {showRegisterModal && <SignUpModal onClose={() => setShowRegisterModal(false)} />}
       <div className="absolute md:relative w-full md:w-[270px] h-full bg-red-jalapeno border-r border-black/[0.1] flex flex-col justify-between">
         <div>
           <div className="flex flex-row justify-between p-4 items-center">
@@ -47,26 +44,20 @@ export const Layout: React.FC<Props> = ({ children }) => {
           <div className="flex flex-col mt-10">
             <>
               {menus
-                .filter(
-                  ({ authRequired }) => !authRequired || user !== undefined
-                )
+                .filter(({ authRequired }) => !authRequired || user !== undefined)
                 .map((item, index) => (
-                  <div key={index}>
-                    {item.path === currentPath ? (
-                      <div className="cursor-pointer flex justify-between items-center bg-gradient-to-l from-red-jalapeno to-red-jalapeno-dark w-full py-4 px-4 hover:from-red-jalapeno-light hover:to-red-jalapeno-light">
-                        <span className="h-full text-lg font-semibold text-white">
-                          {item.name}
-                        </span>
-                        <item.icon color="white" size={20} className="mr-2" />
-                      </div>
-                    ) : (
-                      <div className="cursor-pointer flex justify-between items-center w-full py-4 px-4 hover:bg-red-jalapeno-light">
-                        <span className="h-full text-lg font-semibold text-white">
-                          {item.name}
-                        </span>
-                        <item.icon color="white" size={20} className="mr-2" />
-                      </div>
+                  <div
+                    key={index}
+                    className={clsx(
+                      "cursor-pointer flex justify-between items-center py-4 px-4",
+                      item.path === currentPath
+                        ? "bg-gradient-to-l from-red-jalapeno to-red-jalapeno-dark w-full hover:from-red-jalapeno-light hover:to-red-jalapeno-light"
+                        : "hover:bg-red-jalapeno-light"
                     )}
+                    onClick={() => router.push(item.path)}
+                  >
+                    <span className="h-full text-lg font-semibold text-white">{item.name}</span>
+                    <item.icon color="white" size={20} className="mr-2" />
                   </div>
                 ))}
             </>

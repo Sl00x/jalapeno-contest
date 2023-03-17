@@ -5,7 +5,7 @@ export const menus = [
   {
     name: "Mes concours",
     icon: RiListCheck,
-    path: "/mes-concours",
+    path: "/mycontests",
     authRequired: true,
   },
 ];

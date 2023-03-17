@@ -3,6 +3,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -14,8 +15,14 @@ export class ContestController {
   constructor(private readonly contestService: ContestService) {}
 
   @Get('')
-  async getContests() {
-    return this.contestService.getContests();
+  async getContests(@Query() query) {
+    return this.contestService.getContests(query.query);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('self')
+  async getSelfContests(@Request() req) {
+    return this.contestService.getSelfContests(+req.user.id);
   }
 
   @Get('soon')
@@ -25,7 +32,6 @@ export class ContestController {
 
   @Get(':id')
   async getContest(@Param() params) {
-    console.log('coucou id');
     return this.contestService.getContest(+params.id);
   }
 
