@@ -35,12 +35,11 @@ const Transactions: React.FC = () => {
       : [];
     let chartdata: any[] = [];
     if (user && user.referrers) {
+      let result = 0;
       user.referrers.forEach((refferal) => {
-        let result = 0;
         refferal.referral.transactions.forEach((trans) => {
-          result += trans.amount;
+          result += trans.amount * 0.1;
           updateTransaction.push(trans);
-          setTransactions(undefined);
         });
         setTransactions(updateTransaction);
         setTotalMoneyWin(result);
@@ -105,6 +104,32 @@ const Transactions: React.FC = () => {
 
   return (
     <div className="w-full h-full">
+      <div className="grid grid-cols-3 gap-2 p-4">
+        <Card
+          className="w-full mx-auto rounded-none"
+          decoration="top"
+          decorationColor="green"
+        >
+          <Text>Argent ajouté</Text>
+          <Metric>$ {totalRefund().toFixed(2)}</Metric>
+        </Card>
+        <Card
+          className="w-full mx-auto  rounded-none"
+          decoration="top"
+          decorationColor="red"
+        >
+          <Text>Total dépensé</Text>
+          <Metric>$ {totalTicketBuy().toFixed(2)}</Metric>
+        </Card>
+        <Card
+          className="w-full mx-auto  rounded-none"
+          decoration="top"
+          decorationColor="blue"
+        >
+          <Text>Solde actuel</Text>
+          <Metric>$ {user?.balance.toFixed(2)}</Metric>
+        </Card>
+      </div>
       <div className="w-full grid grid-cols-4 p-4 gap-4">
         <div>
           <Card className="max-w-md h-full rounded-none">
@@ -142,7 +167,7 @@ const Transactions: React.FC = () => {
       <div className="w-full p-4">
         <Card className="w-full rounded-none">
           <div className="flex w-full justify-between">
-            <Title>{"Historique des reçus"}</Title>
+            <Title>{"Historique des reçus par parrainage."}</Title>
             <Badge size="sm">{totalMoneyWin.toFixed(2)}€</Badge>
           </div>
           <List className="h-[200px] overflow-y-auto">
