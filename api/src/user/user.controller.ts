@@ -21,7 +21,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Put('refund')
-  async refund(@Body() body: { amount: number }, @Request() req) {
-    return this.userService.addAmount(body.amount, req.user.id);
+  async refund(@Body() body: { orderId: string }, @Request() req) {
+    return this.userService.addAmount(body.orderId, req.user.id);
   }
 }

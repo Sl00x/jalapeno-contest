@@ -29,7 +29,7 @@ export const userApi = createApi({
       }),
       providesTags: ["ProfileTickets"],
     }),
-    refund: builder.mutation<void, { amount: number }>({
+    refund: builder.mutation<void, { amount: number; orderId: string }>({
       query: (body) => ({
         url: `/refund`,
         method: "PUT",
