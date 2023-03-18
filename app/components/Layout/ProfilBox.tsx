@@ -26,7 +26,10 @@ export const ProfilBox: React.FC = () => {
             <RiFileCopy2Line />
           </div>
           <span className="text-white font-semibold text-sm">{`${user?.firstname} ${user?.lastname}`}</span>
-          <span onClick={() => logout()} className="text-white/50  text-sm cursor-pointer">
+          <span
+            onClick={() => logout()}
+            className="text-white/50  text-sm cursor-pointer"
+          >
             Se déconnecter
           </span>
         </div>
@@ -34,11 +37,15 @@ export const ProfilBox: React.FC = () => {
           className="bg-white/30 flex flex-row items-center px-2 py-1 gap-2 cursor-pointer"
           onClick={() => setPaymentModalOpen(true)}
         >
-          <span className="text-white font-semibold text-xl">{user?.balance}</span>
+          <span className="text-white font-semibold text-lg">
+            {user?.balance.toFixed(2)}
+          </span>
           <RiMoneyEuroCircleLine color="white" size={20} />
         </div>
       </div>
-      {paymentModalOpen && <PaymentModal onClose={() => setPaymentModalOpen(false)} />}
+      {paymentModalOpen && (
+        <PaymentModal onClose={() => setPaymentModalOpen(false)} />
+      )}
     </div>
   );
 };

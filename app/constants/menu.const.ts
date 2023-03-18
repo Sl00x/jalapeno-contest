@@ -1,4 +1,10 @@
-import { RiExchangeFundsLine, RiGameLine, RiListCheck } from "react-icons/ri";
+import {
+  RiDashboardLine,
+  RiExchangeFundsLine,
+  RiGameLine,
+  RiInformationLine,
+  RiListCheck,
+} from "react-icons/ri";
 
 export const menus = [
   { name: "Découvrir", icon: RiGameLine, path: "/", authRequired: false },
@@ -9,9 +15,9 @@ export const menus = [
     authRequired: true,
   },
   {
-    name: "Mes transactions",
-    icon: RiExchangeFundsLine,
-    path: "/transactions",
+    name: "Mon dashboard",
+    icon: RiDashboardLine,
+    path: "/dashboard",
     authRequired: true,
   },
 ];

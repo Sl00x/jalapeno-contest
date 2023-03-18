@@ -26,9 +26,13 @@ export const Layout: React.FC<Props> = ({ children }) => {
 
   return (
     <div className="relative w-screen h-screen bg-white flex fex-row overflow-x-hidden">
-      {showLoginModal && <SignInModal onClose={() => setShowLoginModal(false)} />}
-      {showRegisterModal && <SignUpModal onClose={() => setShowRegisterModal(false)} />}
-      <div className="absolute md:relative w-full md:w-[270px] h-full bg-red-jalapeno border-r border-black/[0.1] flex flex-col justify-between">
+      {showLoginModal && (
+        <SignInModal onClose={() => setShowLoginModal(false)} />
+      )}
+      {showRegisterModal && (
+        <SignUpModal onClose={() => setShowRegisterModal(false)} />
+      )}
+      <div className="absolute md:relative w-full md:w-[320px] h-full bg-red-jalapeno border-r border-black/[0.1] flex flex-col justify-between">
         <div>
           <div className="flex flex-row justify-between p-4 items-center">
             <div></div>
@@ -44,7 +48,9 @@ export const Layout: React.FC<Props> = ({ children }) => {
           <div className="flex flex-col mt-10">
             <>
               {menus
-                .filter(({ authRequired }) => !authRequired || user !== undefined)
+                .filter(
+                  ({ authRequired }) => !authRequired || user !== undefined
+                )
                 .map((item, index) => (
                   <div
                     key={index}
@@ -56,7 +62,9 @@ export const Layout: React.FC<Props> = ({ children }) => {
                     )}
                     onClick={() => router.push(item.path)}
                   >
-                    <span className="h-full text-lg font-semibold text-white">{item.name}</span>
+                    <span className="h-full text-lg font-semibold text-white">
+                      {item.name}
+                    </span>
                     <item.icon color="white" size={20} className="mr-2" />
                   </div>
                 ))}

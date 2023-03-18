@@ -20,7 +20,33 @@ export class UserService {
   }
 
   async findById(id: number): Promise<User | undefined> {
-    return this.prisma.user.findFirst({ where: { id } });
+    return this.prisma.user.findFirst({
+      where: { id },
+      include: {
+        transactions: { orderBy: { createdAt: 'desc' } },
+        partOfContests: {
+          include: {
+            contest: true,
+          },
+        },
+        referrals: {
+          orderBy: { createdAt: 'asc' },
+          include: {
+            referrer: true,
+          },
+        },
+        referrers: {
+          orderBy: { createdAt: 'asc' },
+          include: {
+            referral: {
+              include: {
+                transactions: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 
   async getMyTicketsForContestId(
@@ -40,7 +66,7 @@ export class UserService {
     const request = new paypal.orders.OrdersGetRequest(orderId);
 
     const response = await this.payPalClient.execute(request);
-    const amount = response.result.purchase_units[0].amount;
+    const amount = parseFloat(response.result.purchase_units[0].amount.value);
 
     await this.prisma.transaction.create({
       data: {

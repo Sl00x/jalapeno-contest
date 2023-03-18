@@ -52,8 +52,10 @@ export class AuthService {
   }
 
   async createUser(data: Prisma.UserCreateInput) {
+    const uuidToken = randomUUID();
+    let referral: User = null;
     if (data.referrerCode) {
-      await this.prisma.user.findFirstOrThrow({
+      referral = await this.prisma.user.findFirstOrThrow({
         where: { referralCode: data.referrerCode },
       });
     }
@@ -64,7 +66,7 @@ export class AuthService {
           ...data,
           password: await bcrypt.hash(data.password, 10),
           birthdate: new Date(data.birthdate),
-          referralCode: randomUUID(),
+          referralCode: uuidToken,
         },
       })
       .catch((error) => {
@@ -75,6 +77,15 @@ export class AuthService {
         }
         throw error;
       });
+
+    if (referral) {
+      await this.prisma.referring.create({
+        data: {
+          referralId: user.id,
+          referrerId: referral.id,
+        },
+      });
+    }
 
     return user;
   }

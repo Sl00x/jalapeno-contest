@@ -7,11 +7,14 @@ interface ContestsListProps {
   onSelectContestId: (contestId: Contest["id"]) => void;
 }
 
-const ContestsList: FC<ContestsListProps> = ({ contests, onSelectContestId }) => {
+const ContestsList: FC<ContestsListProps> = ({
+  contests,
+  onSelectContestId,
+}) => {
   if (contests.length === 0) {
     return (
       <div className="text-black/70">
-        Il n'y a aucun concours dans cette catégorie pour le moment
+        {"Il n'y a aucun concours dans cette catégorie pour le moment"}
       </div>
     );
   }
