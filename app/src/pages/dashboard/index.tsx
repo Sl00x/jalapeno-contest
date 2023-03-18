@@ -22,6 +22,7 @@ import {
   List,
   Badge,
 } from "@tremor/react";
+import { SuccessToast } from "../../../utils/toast";
 
 const Transactions: React.FC = () => {
   const { user } = useContext(AuthContext);
@@ -44,7 +45,7 @@ const Transactions: React.FC = () => {
 
         chartdata.push({
           date: refferal.createdAt,
-          "Utilisateur inscript avec votre code": user.referrers.filter(
+          "Utilisateurs inscrits avec mon code": user.referrers.filter(
             (ref) => ref.createdAt === refferal.createdAt
           ).length,
         });
@@ -53,8 +54,7 @@ const Transactions: React.FC = () => {
     }
   }, [user]);
 
-  const dataFormatter = (number: number) =>
-    `${Intl.NumberFormat("fr").format(number).toString()}`;
+  const dataFormatter = (number: number) => `${Intl.NumberFormat("fr").format(number).toString()}`;
 
   const totalRefund = () => {
     const completedTransactions = user?.transactions.filter(
@@ -84,9 +84,7 @@ const Transactions: React.FC = () => {
       case "COMPLETED":
         return <RiAddLine color="green" size={20} />;
       case "PENDING":
-        return (
-          <RiLoaderLine className="text-black/50 animate-spin" size={20} />
-        );
+        return <RiLoaderLine className="text-black/50 animate-spin" size={20} />;
       case "DECLINED":
         return <RiCloseLine className="text-red-jalapeno" size={20} />;
       case "FAILED":
@@ -103,46 +101,38 @@ const Transactions: React.FC = () => {
   return (
     <div className="w-full h-full">
       <div className="grid grid-cols-3 gap-2 p-4">
-        <Card
-          className="w-full mx-auto rounded-none"
-          decoration="top"
-          decorationColor="green"
-        >
+        <Card className="w-full mx-auto rounded-none" decoration="top" decorationColor="green">
           <Text>Argent ajouté</Text>
-          <Metric>$ {totalRefund().toFixed(2)}</Metric>
+          <Metric>{totalRefund().toFixed(2)} €</Metric>
         </Card>
-        <Card
-          className="w-full mx-auto  rounded-none"
-          decoration="top"
-          decorationColor="red"
-        >
+        <Card className="w-full mx-auto  rounded-none" decoration="top" decorationColor="red">
           <Text>Total dépensé</Text>
-          <Metric>$ {totalTicketBuy().toFixed(2)}</Metric>
+          <Metric>{totalTicketBuy().toFixed(2)} €</Metric>
         </Card>
-        <Card
-          className="w-full mx-auto  rounded-none"
-          decoration="top"
-          decorationColor="blue"
-        >
+        <Card className="w-full mx-auto  rounded-none" decoration="top" decorationColor="blue">
           <Text>Solde actuel</Text>
-          <Metric>$ {user?.balance.toFixed(2)}</Metric>
+          <Metric>{user?.balance.toFixed(2)} €</Metric>
         </Card>
       </div>
       <div className="w-full grid grid-cols-4 p-4 gap-4">
         <div>
           <Card className="max-w-md h-full rounded-none">
-            <Text>Nombre de parrainage</Text>
+            <Text>Nombre de parrainages</Text>
             <Metric>{user?.referrers.length}</Metric>
             <Subtitle>
-              chacun de ces parrainge vous offre 10% sur chaque transaction de
-              rechargement de portefeuille
+              chacun de ces parrainages vous offre 10% sur chaque transaction d'ajout de fonds par
+              le filleul
             </Subtitle>
             <Divider />
             <Callout
-              className="h-auto mt-4"
-              title="Votre code parrain"
+              onClick={() => {
+                navigator.clipboard.writeText(user?.referralCode ?? "");
+                SuccessToast("Code parrainage copié");
+              }}
+              className="h-auto mt-4 cursor-pointer"
+              title="Mon code parrainage"
               icon={RiFileCopyLine}
-              color="rose"
+              color="yellow"
             >
               {user?.referralCode}
             </Callout>
@@ -150,12 +140,12 @@ const Transactions: React.FC = () => {
         </div>
         <div className="col-span-3">
           <Card className="rounded-none">
-            <Title>Utilisateur inscrit avec votre code parrainage</Title>
+            <Title>Utilisateurs inscrits avec mon code parrainage</Title>
             <AreaChart
               className="h-72 mt-4"
               data={graphData ?? []}
               index="date"
-              categories={["Utilisateur inscript avec votre code"]}
+              categories={["Utilisateurs inscrits avec mon code"]}
               colors={["red"]}
               valueFormatter={dataFormatter}
             />
@@ -170,17 +160,21 @@ const Transactions: React.FC = () => {
               <Badge size="sm">{totalMoneyWin.toFixed(2)}€</Badge>
             </div>
             <List className="h-[200px] overflow-y-auto">
-              {transactions?.map((trans) => (
-                <ListItem key={trans.id}>
-                  <span>{trans.createdAt.split("T")[0]}</span>
-                  <div className="text-lg flex gap-2 items-center">
-                    <RiAddLine className="text-green-400" />
-                    <span>{(trans.amount * 0.1).toFixed(2)}€</span>
-                    <RiArrowLeftLine />
-                    <span>{trans.amount.toFixed(2)}€</span>
-                  </div>
-                </ListItem>
-              ))}
+              {transactions && transactions.length > 0 ? (
+                transactions.map((trans) => (
+                  <ListItem key={trans.id}>
+                    <span>{trans.createdAt.split("T")[0]}</span>
+                    <div className="text-lg flex gap-2 items-center">
+                      <RiAddLine className="text-green-400" />
+                      <span>{(trans.amount * 0.1).toFixed(2)}€</span>
+                      <RiArrowLeftLine />
+                      <span>{trans.amount.toFixed(2)}€</span>
+                    </div>
+                  </ListItem>
+                ))
+              ) : (
+                <div className="mt-2">Aucune transaction pour le moment</div>
+              )}
             </List>
           </Card>
         </div>
@@ -191,15 +185,19 @@ const Transactions: React.FC = () => {
               <Badge size="sm">{totalRefund().toFixed(2)}€</Badge>
             </div>
             <List className="h-[200px] overflow-y-auto">
-              {user?.transactions.map((trans) => (
-                <ListItem key={trans.id}>
-                  <span>{trans.createdAt.split("T")[0]}</span>
-                  <div className="text-lg flex gap-2 items-center">
-                    {transactionStatusIcon(trans)}
-                    <span>{trans.amount.toFixed(2)}€</span>
-                  </div>
-                </ListItem>
-              ))}
+              {user?.transactions && user.transactions.length > 0 ? (
+                user.transactions.map((trans) => (
+                  <ListItem key={trans.id}>
+                    <span>{trans.createdAt.split("T")[0]}</span>
+                    <div className="text-lg flex gap-2 items-center">
+                      {transactionStatusIcon(trans)}
+                      <span>{trans.amount.toFixed(2)}€</span>
+                    </div>
+                  </ListItem>
+                ))
+              ) : (
+                <div className="mt-2">Aucune transaction pour le moment</div>
+              )}
             </List>
           </Card>
         </div>
