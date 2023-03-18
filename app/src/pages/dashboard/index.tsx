@@ -30,9 +30,7 @@ const Transactions: React.FC = () => {
   const [totalMoneyWin, setTotalMoneyWin] = useState(0);
 
   useEffect(() => {
-    const updateTransaction: Transaction[] | undefined = transactions
-      ? [...transactions]
-      : [];
+    const updateTransaction: Transaction[] = [];
     let chartdata: any[] = [];
     if (user && user.referrers) {
       let result = 0;
@@ -164,26 +162,47 @@ const Transactions: React.FC = () => {
           </Card>
         </div>
       </div>
-      <div className="w-full p-4">
-        <Card className="w-full rounded-none">
-          <div className="flex w-full justify-between">
-            <Title>{"Historique des reçus par parrainage."}</Title>
-            <Badge size="sm">{totalMoneyWin.toFixed(2)}€</Badge>
-          </div>
-          <List className="h-[200px] overflow-y-auto">
-            {transactions?.map((trans) => (
-              <ListItem key={trans.id}>
-                <span>{trans.createdAt.split("T")[0]}</span>
-                <div className="text-lg flex gap-2 items-center">
-                  <RiAddLine className="text-green-400" />
-                  <span>{(trans.amount * 0.1).toFixed(2)}€</span>
-                  <RiArrowLeftLine />
-                  <span>{trans.amount.toFixed(2)}€</span>
-                </div>
-              </ListItem>
-            ))}
-          </List>
-        </Card>
+      <div className="grid grid-cols-2">
+        <div className="w-full p-4">
+          <Card className="w-full rounded-none">
+            <div className="flex w-full justify-between">
+              <Title>{"Historique des reçus par parrainage"}</Title>
+              <Badge size="sm">{totalMoneyWin.toFixed(2)}€</Badge>
+            </div>
+            <List className="h-[200px] overflow-y-auto">
+              {transactions?.map((trans) => (
+                <ListItem key={trans.id}>
+                  <span>{trans.createdAt.split("T")[0]}</span>
+                  <div className="text-lg flex gap-2 items-center">
+                    <RiAddLine className="text-green-400" />
+                    <span>{(trans.amount * 0.1).toFixed(2)}€</span>
+                    <RiArrowLeftLine />
+                    <span>{trans.amount.toFixed(2)}€</span>
+                  </div>
+                </ListItem>
+              ))}
+            </List>
+          </Card>
+        </div>
+        <div className="w-full p-4">
+          <Card className="w-full rounded-none">
+            <div className="flex w-full justify-between">
+              <Title>{"Historique transactions"}</Title>
+              <Badge size="sm">{totalRefund().toFixed(2)}€</Badge>
+            </div>
+            <List className="h-[200px] overflow-y-auto">
+              {user?.transactions.map((trans) => (
+                <ListItem key={trans.id}>
+                  <span>{trans.createdAt.split("T")[0]}</span>
+                  <div className="text-lg flex gap-2 items-center">
+                    {transactionStatusIcon(trans)}
+                    <span>{trans.amount.toFixed(2)}€</span>
+                  </div>
+                </ListItem>
+              ))}
+            </List>
+          </Card>
+        </div>
       </div>
     </div>
   );
