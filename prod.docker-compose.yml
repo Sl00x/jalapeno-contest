@@ -5,8 +5,6 @@ services:
     build:
       context: ./app
       dockerfile: ./prod.Dockerfile
-    volumes:
-      - ./app:/app
     restart: always
 
   database:
@@ -35,8 +33,6 @@ services:
       args:
         DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
     restart: always
-    volumes:
-      - ./api:/app
     environment:
       PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID}
       PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET}
