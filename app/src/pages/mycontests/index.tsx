@@ -25,7 +25,7 @@ export default function MyContests() {
     if (user === null) {
       router.push("/");
     }
-  }, [router]);
+  }, [router, user]);
 
   if (!user) {
     return null;

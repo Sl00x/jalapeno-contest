@@ -55,7 +55,7 @@ const DashboardContent: React.FC = () => {
       });
       setGraphData(chartdata);
     }
-  }, [user]);
+  }, [user, t]);
 
   const dataFormatter = (number: number) =>
     `${Intl.NumberFormat(i18n.language).format(number).toString()}`;
