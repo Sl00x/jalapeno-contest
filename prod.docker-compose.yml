@@ -27,14 +27,6 @@ services:
     volumes:
       - database:/var/lib/postgresql/data
 
-  adminer:
-    image: adminer:4.8.1
-    restart: always
-    ports:
-      - 3334:8080
-    depends_on:
-      - database
-
   api:
     privileged: true
     build:
