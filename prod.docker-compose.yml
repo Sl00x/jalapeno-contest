@@ -46,9 +46,8 @@ services:
     build: ./nginx
     restart: always
     ports:
-      - "443:80"
+      - "443:443"
     volumes:
-      - ./nginx/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro
       - ./ssl:/ssl:ro
       - ./logs/nginx:/var/log/nginx
     depends_on:
