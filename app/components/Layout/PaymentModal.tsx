@@ -8,13 +8,11 @@ import { ErrorToast } from "../../utils/toast";
 import { useRefundMutation } from "../../features/api/user-api";
 import { AuthContext } from "../Auth/AuthProvider";
 import { RiAddFill, RiMoneyEuroCircleLine } from "react-icons/ri";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { paypalCardLogo, paypalLogo } from "../../constants/paypal.conts";
+import { useTranslation } from "next-i18next";
 
 const initialOptions = {
-  "client-id":
-    "AU0awvBN6LL7DE6jbfYTMtmqRXOwkJ6qnWniFEwhIdlBxIMNGb4XtoxmHE6mDMkvycY2X_oMH0doYrW9",
+  "client-id": "AU0awvBN6LL7DE6jbfYTMtmqRXOwkJ6qnWniFEwhIdlBxIMNGb4XtoxmHE6mDMkvycY2X_oMH0doYrW9",
   currency: "EUR",
   intent: "capture",
 };
@@ -30,6 +28,7 @@ const PaypalButtons: FC<PBProps> = ({ amount }) => {
   const { refetch } = useContext(AuthContext);
 
   const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
+  const { t } = useTranslation("layout");
 
   useEffect(() => {
     dispatch({
@@ -61,15 +60,11 @@ const PaypalButtons: FC<PBProps> = ({ amount }) => {
             if (!actions?.order) return;
             return actions.order.capture().then((details) => {
               if (!details || details.status !== "COMPLETED")
-                return ErrorToast(
-                  "Une erreur est survenue durant la transaction"
-                );
+                return ErrorToast(t("an_error_occured_during_transaction"));
               const total = details.purchase_units
                 .map(({ amount }) => +amount.value)
                 .reduce((total, actual) => total + actual);
-              refund({ amount: total, orderId: data.orderID }).then(() =>
-                refetch()
-              );
+              refund({ amount: total, orderId: data.orderID }).then(() => refetch());
             });
           }}
         />
@@ -94,15 +89,11 @@ interface Props {
 const PaymentModal: FC<Props> = ({ onClose }) => {
   const [amount, setAmount] = useState<string>("");
   const { user } = useContext(AuthContext);
+  const { t, i18n } = useTranslation("layout");
 
   if (!user) return null;
   return (
-    <div
-      className="relative z-10"
-      aria-labelledby="modal-title"
-      role="dialog"
-      aria-modal="true"
-    >
+    <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="fixed inset-0 bg-black bg-opacity-75 transition-opacity"></div>
 
       <div className="fixed inset-0 overflow-y-auto" onClick={onClose}>
@@ -115,20 +106,15 @@ const PaymentModal: FC<Props> = ({ onClose }) => {
               <div className="flex flex-row space-x-6">
                 <div>
                   <div className="bg-gray-light p-5">
-                    <RiMoneyEuroCircleLine
-                      className="text-gray-darker"
-                      size={50}
-                    />
+                    <RiMoneyEuroCircleLine className="text-gray-darker" size={50} />
                   </div>
                 </div>
                 <div className="flex-1 flex flex-col space-y-2">
-                  <div className="text-3xl font-bold mb-8">Mes fonds</div>
+                  <div className="text-3xl font-bold mb-8">{t("add_funds")}</div>
                   <div className="p-4 bg-red-jalapeno text-white flex flex-row items-center justify-between">
                     <div className="flex flex-col justify-between">
-                      <div className="text-4xl font-medium">
-                        {user.balance.toFixed(2)}
-                      </div>
-                      <div>Balance actuelle</div>
+                      <div className="text-4xl font-medium">{user.balance.toFixed(2)}</div>
+                      <div>{t("current_balance")}</div>
                     </div>
                     <div>
                       <RiMoneyEuroCircleLine size={70} />
@@ -149,14 +135,19 @@ const PaymentModal: FC<Props> = ({ onClose }) => {
                           className="text-4xl font-medium w-1/3 bg-transparent outline-none border-b border-b-red-jalapeno"
                           type="number"
                         />
-                        <div>Montant à ajouter</div>
+                        <div>{t("amount_to_add")}</div>
                       </div>
                       <div>
                         <RiMoneyEuroCircleLine size={70} />
                       </div>
                     </div>
                   </div>
-                  <PayPalScriptProvider options={{ ...initialOptions }}>
+                  <PayPalScriptProvider
+                    options={{
+                      ...initialOptions,
+                      locale: i18n.language === "fr" ? "fr_FR" : "en_GB",
+                    }}
+                  >
                     <PaypalButtons amount={amount} />
                   </PayPalScriptProvider>
                 </div>

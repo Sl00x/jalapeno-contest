@@ -1,0 +1,14 @@
+{
+  "money_added": "Argent ajouté",
+  "total_spent": "Total dépensé",
+  "current_balance": "Solde actuel",
+  "number_of_referrals": "Nombre de parrainages",
+  "each_referral_give_you": "Chacun de ces parrainages vous offre 10% sur chaque transaction d'ajout de fonds par le filleul",
+  "users_registered_with_my_referral_code": "Utilisateurs inscrits avec mon code parrainage",
+  "users_registered_with_my_code": "Utilisateurs inscrits avec mon code",
+  "my_referral_code": "Mon code parrainage",
+  "referral_receipt_history": "Historique des reçus par parrainage",
+  "transactions_history": "Historique des transactions",
+  "no_transaction_yet": "Aucune transaction pour le moment",
+  "referral_code_copied": "Code parrainage copié"
+}

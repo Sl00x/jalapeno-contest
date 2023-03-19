@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { FC, useContext } from "react";
+import { useTranslation } from "next-i18next";
 import { RiTicket2Line } from "react-icons/ri";
 import Contest from "../../features/models/contest.model";
 import { AuthContext } from "../Auth/AuthProvider";
@@ -12,6 +13,8 @@ interface Props {
 const ContestModalButton: FC<Props> = ({ contest, onClick }) => {
   const { user } = useContext(AuthContext);
 
+  const { t } = useTranslation("contest");
+
   const startAt = new Date(contest.startAt);
   const endAt = new Date(contest.endAt);
   const hasBegan = startAt <= new Date();
@@ -20,12 +23,12 @@ const ContestModalButton: FC<Props> = ({ contest, onClick }) => {
   let text: string = "";
   let canBuyTicket: boolean = false;
   if (!hasBegan) {
-    text = "Ce concours n'a pas encore commencé";
+    text = t("contest_not_started_yet");
   } else if (isDone) {
-    text = "Ce concours est terminé";
+    text = t("contest_over");
   } else {
     canBuyTicket = (user?.balance ?? 0) >= contest.price;
-    text = canBuyTicket ? `Acheter un ticket pour ${contest.price}€` : "Fonds insuffisants";
+    text = canBuyTicket ? `${t("buy_a_ticket_for")} ${contest.price}€` : t("insufficient_funds");
   }
 
   return (

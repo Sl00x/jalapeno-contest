@@ -4,22 +4,24 @@ import clsx from "clsx";
 import { RiUser2Line } from "react-icons/ri";
 import { getStep } from "../../utils/contest";
 import Contest from "../../features/models/contest.model";
+import { useTranslation } from "next-i18next";
 
 interface ContestCardProps {
   contest: Contest;
   onClick: () => void;
 }
 
-const timeAgo = new TimeAgo("fr-FR");
-
 const ContestCard: FC<ContestCardProps> = ({ contest, onClick }) => {
+  const { t, i18n } = useTranslation("contest");
+  const timeAgo = new TimeAgo(i18n.language === "fr" ? "fr-FR" : "en-GB");
+
   const participants = contest.participants.length;
   const { step } = getStep(contest.steps, participants);
   const startAt = new Date(contest.startAt);
   const endAt = new Date(contest.endAt);
   const hasBegan = startAt <= new Date();
   const isDone = endAt <= new Date();
-  const timeLeftPrefix = hasBegan ? (isDone ? "Terminé" : "Fin") : "Commence";
+  const timeLeftPrefix = t(hasBegan ? (isDone ? "finished" : "ends") : "starts");
   const timeLeft = timeAgo.format(endAt);
 
   const percent = Math.min((participants * 100) / step.threshold, 100);

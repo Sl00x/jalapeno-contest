@@ -6,8 +6,8 @@ import ContestSteps from "./ContestSteps";
 import { useGetContestQuery, useParticipateMutation } from "../../features/api/contest-api";
 import { AuthContext } from "../Auth/AuthProvider";
 import { SuccessToast } from "../../utils/toast";
-import clsx from "clsx";
 import ContestModalButton from "./ContestModalButton";
+import { useTranslation } from "next-i18next";
 
 interface ContestModalProps {
   contestId: Contest["id"];
@@ -16,6 +16,8 @@ interface ContestModalProps {
 
 const ContestModal: FC<ContestModalProps> = ({ contestId, onClose }) => {
   const { data: contest } = useGetContestQuery(contestId);
+
+  const { t } = useTranslation("contest");
 
   const [participate] = useParticipateMutation();
   const { user, refetch } = useContext(AuthContext);
@@ -29,7 +31,7 @@ const ContestModal: FC<ContestModalProps> = ({ contestId, onClose }) => {
 
   const handleParticipate = async () => {
     await participate(contest.id);
-    SuccessToast(`Vous venez de prendre un ticket pour ${contest.name}`);
+    SuccessToast(`${t("you_just_took_a_ticket_for")} ${contest.name}`);
     refetch();
   };
 
@@ -55,7 +57,7 @@ const ContestModal: FC<ContestModalProps> = ({ contestId, onClose }) => {
                     <div className="flex flex-row items-center space-x-2">
                       <RiListCheck />
                       <div>
-                        Étape:{" "}
+                        {t("step")}:{" "}
                         <span className="text-red-jalapeno font-medium">
                           {stepNumber}/{contest.steps.length}
                         </span>
@@ -65,7 +67,7 @@ const ContestModal: FC<ContestModalProps> = ({ contestId, onClose }) => {
                       <div className="flex flex-row items-center space-x-2">
                         <RiTicket2Line />
                         <div>
-                          Mes tickets:{" "}
+                          {t("my_tickets")}:{" "}
                           <span className="text-red-jalapeno font-medium">{tickets}</span>
                         </div>
                       </div>

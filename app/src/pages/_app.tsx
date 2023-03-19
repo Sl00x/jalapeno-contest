@@ -5,12 +5,15 @@ import { Layout } from "../../components/Layout/Layout";
 import { RootStore } from "../../features/store/root-store";
 import TimeAgo from "javascript-time-ago";
 import fr from "javascript-time-ago/locale/fr.json";
+import enGB from "javascript-time-ago/locale/en-GB.json";
 import { Toaster, ToastBar } from "react-hot-toast";
 import { AuthProvider } from "../../components/Auth/AuthProvider";
+import { appWithTranslation } from "next-i18next";
 
 TimeAgo.addLocale(fr);
+TimeAgo.addLocale(enGB);
 
-export default function App({ Component, pageProps }: AppProps) {
+const App = ({ Component, pageProps }: AppProps) => {
   return (
     <Provider store={RootStore}>
       <Toaster position="top-right">
@@ -32,4 +35,6 @@ export default function App({ Component, pageProps }: AppProps) {
       </AuthProvider>
     </Provider>
   );
-}
+};
+
+export default appWithTranslation(App);

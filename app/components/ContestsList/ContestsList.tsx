@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useTranslation } from "next-i18next";
 import Contest from "../../features/models/contest.model";
 import ContestCard from "./ContestCard";
 
@@ -7,16 +8,11 @@ interface ContestsListProps {
   onSelectContestId: (contestId: Contest["id"]) => void;
 }
 
-const ContestsList: FC<ContestsListProps> = ({
-  contests,
-  onSelectContestId,
-}) => {
+const ContestsList: FC<ContestsListProps> = ({ contests, onSelectContestId }) => {
+  const { t } = useTranslation("contest");
+
   if (contests.length === 0) {
-    return (
-      <div className="text-black/70">
-        {"Il n'y a aucun concours dans cette catégorie pour le moment"}
-      </div>
-    );
+    return <div className="text-black/70">{t("no_contest_at_the_moment")}</div>;
   }
   return (
     <div className="flex flex-row space-x-4">

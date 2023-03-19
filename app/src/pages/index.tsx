@@ -5,28 +5,23 @@ import { useGetContestsQuery } from "../../features/api/contest-api";
 import ContestModal from "../../components/ContestModal/ContestModal";
 import Contest from "../../features/models/contest.model";
 import Search from "../../components/Home/Search";
+import getStaticTranslationProps from "../../utils/translation";
+
+export const getStaticProps = getStaticTranslationProps;
 
 export default function Home() {
   const [query, setQuery] = useState<string>("");
   const [selectedContestId, setSelectedContestId] = useState<Contest["id"]>();
 
-  const { data: contests } = useGetContestsQuery(
-    query === "" ? undefined : query
-  );
+  const { data: contests } = useGetContestsQuery(query === "" ? undefined : query);
 
   return (
     <div className="h-full">
       <SearchBar query={query} onQueryChange={setQuery} />
       {query === "" ? (
-        <HomeList
-          contests={contests ?? []}
-          onSelectContestId={setSelectedContestId}
-        />
+        <HomeList contests={contests ?? []} onSelectContestId={setSelectedContestId} />
       ) : (
-        <Search
-          contests={contests ?? []}
-          onSelectContestId={setSelectedContestId}
-        />
+        <Search contests={contests ?? []} onSelectContestId={setSelectedContestId} />
       )}
       {selectedContestId && (
         <ContestModal

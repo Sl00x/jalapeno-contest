@@ -1,14 +1,15 @@
 import React, { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "next-i18next";
 import {
   useGetProfileQuery,
   useLoginMutation,
   useRegisterMutation,
 } from "../../features/api/auth-api";
 import User from "../../features/models/user.model";
-import { ErrorToast, SuccessToast } from "../../utils/toast";
+import { ErrorToast } from "../../utils/toast";
 
 interface AuthContextType {
-  user: User | undefined;
+  user: User | undefined | null;
   loading: boolean;
   refetch: () => void;
   loginUser: (email: string, password: string, callback?: { onSuccess?: () => void }) => void;
@@ -30,14 +31,16 @@ export const AuthContext = createContext<AuthContextType>({} as AuthContextType)
 
 export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<User | null>();
   const [register] = useRegisterMutation();
   const [login] = useLoginMutation();
-  const { data, refetch } = useGetProfileQuery();
+  const { data, refetch, isLoading } = useGetProfileQuery();
+
+  const { t } = useTranslation("auth");
 
   useEffect(() => {
-    setUser(data);
-  }, [data]);
+    if (!isLoading) setUser(data ?? null);
+  }, [data, isLoading]);
 
   const loginUser = async (
     email: string,
@@ -52,10 +55,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
       password,
     });
     if (response.hasOwnProperty("error")) {
-      ErrorToast("Impossible de vous connecter, réessayer !");
+      ErrorToast(t("unable_to_connect"));
     } else {
-      //inform user about succes of login
-      SuccessToast(`Bonjour, ${email}`);
       const token = (response as { data: { access_token: string } }).data.access_token;
       localStorage.setItem("authenticated", token);
       refetch();
@@ -86,9 +87,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
     setLoading(true);
     const response = await register(userInfos);
     if (response.hasOwnProperty("error")) {
-      ErrorToast("Les informations rentrées sont invalide.");
+      ErrorToast(t("invalid_informations"));
     } else {
-      SuccessToast(`Bienvenue parmis nous ${(response as { data: User }).data.email}`);
       await loginUser((response as { data: User }).data.email, password, callback);
     }
     setLoading(false);
@@ -97,7 +97,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
   const logout = async () => {
     setLoading(true);
     localStorage.removeItem("authenticated");
-    setUser(undefined);
+    setUser(null);
     setLoading(false);
   };
 

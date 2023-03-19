@@ -1,0 +1,14 @@
+{
+  "money_added": "Money added",
+  "total_spent": "Total spent",
+  "current_balance": "Current balance",
+  "number_of_referrals": "Number of referrals",
+  "each_referral_give_you": "Each of these sponsorships offers you 10% on each transaction of adding funds by the referral",
+  "users_registered_with_my_referral_code": "Users registered with my referral code",
+  "users_registered_with_my_code": "Users registered with my code",
+  "my_referral_code": "My referral code",
+  "referral_receipt_history": "Referral receipt history",
+  "transactions_history": "Transactions history",
+  "no_transaction_yet": "No transaction yet",
+  "referral_code_copied": "Referral code copied"
+}

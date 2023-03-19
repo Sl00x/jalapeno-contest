@@ -1,23 +1,35 @@
-import {
-  RiDashboardLine,
-  RiExchangeFundsLine,
-  RiGameLine,
-  RiInformationLine,
-  RiListCheck,
-} from "react-icons/ri";
+import { RiDashboardLine, RiGameLine, RiInformationLine, RiListCheck } from "react-icons/ri";
+
+export interface MenuItem {
+  name: string;
+  icon: any;
+  path: string;
+  position?: "top" | "bottom";
+  authRequired?: boolean;
+}
 
 export const menus = [
-  { name: "Découvrir", icon: RiGameLine, path: "/", authRequired: false },
   {
-    name: "Mes concours",
+    name: "discover",
+    icon: RiGameLine,
+    path: "/",
+  },
+  {
+    name: "my_contests",
     icon: RiListCheck,
     path: "/mycontests",
     authRequired: true,
   },
   {
-    name: "Mon dashboard",
+    name: "my_dashboard",
     icon: RiDashboardLine,
     path: "/dashboard",
     authRequired: true,
   },
-];
+  {
+    name: "informations",
+    icon: RiInformationLine,
+    path: "/informations",
+    position: "bottom",
+  },
+] satisfies MenuItem[];

@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { FC, useState } from "react";
+import { useTranslation } from "next-i18next";
 import { RiUser2Line } from "react-icons/ri";
 import Contest from "../../features/models/contest.model";
 
@@ -10,6 +11,9 @@ interface ContestStepsProps {
 
 const ContestSteps: FC<ContestStepsProps> = ({ steps, participants }) => {
   const [tab, setTab] = useState<number>(0);
+
+  const { t } = useTranslation("contest");
+
   const step = steps[tab];
   const percent = Math.min((participants * 100) / step.threshold, 100);
 
@@ -19,7 +23,9 @@ const ContestSteps: FC<ContestStepsProps> = ({ steps, participants }) => {
         {steps.map((step, index) => (
           <div key={step.id} className="flex-1 flex justify-center">
             <div className="cursor-pointer" onClick={() => setTab(index)}>
-              <div>Étape {index + 1}</div>
+              <div>
+                {t("step")} {index + 1}
+              </div>
               <div
                 className={clsx(
                   "mt-1 w-full h-0.5",

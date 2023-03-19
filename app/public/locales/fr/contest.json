@@ -1,0 +1,17 @@
+{
+  "in_progress": "En cours",
+  "next_contests": "Prochains concours",
+  "finished_contests": "Concours terminés",
+  "take_part_of_contest": "Participer au concours",
+  "ends": "Termine",
+  "starts": "Commence",
+  "finished": "Terminé",
+  "step": "Étape",
+  "no_contest_at_the_moment": "Il n'y a aucun concours dans cette catégorie pour le moment",
+  "you_just_took_a_ticket_for": "Vous venez de prendre un ticket pour",
+  "my_tickets": "Mes tickets",
+  "buy_a_ticket_for": "Acheter un ticket pour",
+  "contest_not_started_yet": "Ce concours n'a pas encore commencé",
+  "contest_over": "Ce concours est terminé",
+  "insufficient_funds": "Fonds insuffisants"
+}

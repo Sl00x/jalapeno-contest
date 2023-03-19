@@ -1,4 +1,5 @@
 import { FC, useContext, useState } from "react";
+import { useTranslation } from "next-i18next";
 import { RiLoginCircleLine, RiTicket2Line } from "react-icons/ri";
 import { AuthContext } from "./AuthProvider";
 
@@ -7,6 +8,8 @@ interface SignInModalProps {
 }
 
 const SignInModal: FC<SignInModalProps> = ({ onClose }) => {
+  const { t } = useTranslation("auth");
+
   const [email, setEmail] = useState("test@test.com");
   const [password, setPassword] = useState("aaa");
   const { loginUser, loading } = useContext(AuthContext);
@@ -28,21 +31,18 @@ const SignInModal: FC<SignInModalProps> = ({ onClose }) => {
                   </div>
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <div className="text-3xl font-bold">Connexion</div>
-                  <div>
-                    Connectez-vous pour participer aux concours et accéder aux concours auxquels
-                    vous avez participés !
-                  </div>
+                  <div className="text-3xl font-bold">{t("signin")}</div>
+                  <div>{t("signin_sub")}</div>
                 </div>
               </div>
               <div className="mt-4 w-full flex flex-col">
-                <label className="text-black/40 mb-1">Adresse e-mail</label>
+                <label className="text-black/40 mb-1">{t("email_address")}</label>
                 <input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-2 py-1 border border-black/5 outline-none focus:outline-1 focus:outline-red-jalapeno mb-4"
                 />
-                <label className="text-black/40 mb-1">Mot de passe</label>
+                <label className="text-black/40 mb-1">{t("password")}</label>
                 <input
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -62,7 +62,7 @@ const SignInModal: FC<SignInModalProps> = ({ onClose }) => {
               className="bg-red-jalapeno text-white w-full text-center mt-2 py-4 cursor-pointer flex flex-row items-center justify-center space-x-2"
             >
               <RiTicket2Line size={20} />
-              <div className="font-medium">se connecter</div>
+              <div className="font-medium">{t("signin")}</div>
             </div>
           </div>
         </div>
