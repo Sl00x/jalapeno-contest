@@ -110,7 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }): JSX.Element
       registerUser,
       logout,
     }),
-    [user, loading]
+    [user, loading, loginUser, refetch, registerUser]
   );
 
   return <AuthContext.Provider value={memoedValue}>{children}</AuthContext.Provider>;

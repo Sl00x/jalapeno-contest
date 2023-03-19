@@ -12,14 +12,26 @@ interface FormattedContentProps {
 const FormattedContent: React.FC<FormattedContentProps> = ({ texts }) => {
   return (
     <>
-      {texts.split("\n").map((line) => {
+      {texts.split("\n").map((line, index) => {
         const [type, text] = line.split("|");
         if (type === "title") {
-          return <div className="text-lg font-bold text-red-jalapeno">{text}</div>;
+          return (
+            <div key={index} className="text-lg font-bold text-red-jalapeno">
+              {text}
+            </div>
+          );
         } else if (type === "subtitle") {
-          return <div className="text-base text-red-jalapeno-lighter">{text}</div>;
+          return (
+            <div key={index} className="text-base text-red-jalapeno-lighter">
+              {text}
+            </div>
+          );
         }
-        return <div className="text-sm">{text}</div>;
+        return (
+          <div key={index} className="text-sm">
+            {text}
+          </div>
+        );
       })}
     </>
   );

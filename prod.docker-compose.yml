@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: ./prod.Dockerfile
+    volumes:
+      - ./app:/app
+    restart: always
+
+  database:
+    image: postgres:12.11-alpine
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      PGUSER: ${POSTGRES_USER}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    volumes:
+      - database:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer:4.8.1
+    restart: always
+    ports:
+      - 3334:8080
+    depends_on:
+      - database
+
+  api:
+    privileged: true
+    build:
+      context: ./api
+      dockerfile: ./prod.Dockerfile
+    restart: always
+    volumes:
+      - ./api:/app
+    environment:
+      PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID}
+      PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
+      JWT_SECRET: "Secret jwt pass"
+    depends_on:
+      database:
+        condition: service_healthy
+
+  nginx:
+    build: ./nginx
+    restart: always
+    ports:
+      - "3333:80"
+    volumes:
+      - ./nginx/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro
+    depends_on:
+      - app
+      - api
+
+volumes:
+  database:
