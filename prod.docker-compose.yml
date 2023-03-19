@@ -40,6 +40,8 @@ services:
     build:
       context: ./api
       dockerfile: ./prod.Dockerfile
+      args:
+        DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
     restart: always
     volumes:
       - ./api:/app

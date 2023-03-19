@@ -3,6 +3,8 @@ WORKDIR /app
 
 COPY . .
 
+ARG DATABASE_URL
+
 RUN yarn
 RUN yarn prisma generate
 RUN yarn prisma migrate deploy
