@@ -25,12 +25,16 @@ const MenuList: React.FC<MenuListProps> = ({ menus, position, currentPath }) => 
   const { t } = useTranslation("layout");
   const router = useRouter();
 
+  useEffect(() => {
+    document.title = "Smoky Contest";
+  }, []);
+
   return (
     <div>
       {menus
         .filter(
           ({ authRequired = false, position: p = "top" }) =>
-            (!authRequired || user !== undefined) && position === p
+            (!authRequired || user) && position === p
         )
         .map((item, index) => (
           <div
@@ -74,7 +78,11 @@ export const Layout: React.FC<Props> = ({ children }) => {
       {showRegisterModal && <SignUpModal onClose={() => setShowRegisterModal(false)} />}
       <div className="absolute md:relative w-full md:w-[320px] h-full bg-red-jalapeno border-r border-black/[0.1] flex flex-col justify-between">
         <div className="flex-1 flex flex-col">
-          <div className="flex flex-row justify-between p-4 items-center">
+          <div className="flex flex-row justify-between px-4 pt-6 items-center">
+            <div className="flex-1 flex flex-row gap-2 items-center">
+              <img src="/logo.png" className="w-10" />
+              <span className="text-white text-xl font-bold">Smoky Contest</span>
+            </div>
             <div>
               <Link
                 href={{ pathname: router.pathname, query: router.query }}
@@ -84,16 +92,12 @@ export const Layout: React.FC<Props> = ({ children }) => {
                 <img src={i18n.language === "fr" ? fr_uri : gb_uri} className="w-8 h-8" />
               </Link>
             </div>
-            <div className="flex flex-row gap-2 items-center">
-              <RiGiftLine color="white" size={46} />
-              <span className="text-white text-3xl font-bold">Jalapeno</span>
-            </div>
             {/*<div className="w-10 h-10 bg-white/20 flex items-center justify-center cursor-pointer hover:bg-white/10">
                 <RiArrowLeftSLine color="white" size={20} />
             </div>*/}
             <div></div>
           </div>
-          <div className="flex-1 flex flex-col mt-10 justify-between">
+          <div className="flex-1 flex flex-col mt-6 justify-between">
             <MenuList currentPath={currentPath} menus={menus} position={"top"} />
             <MenuList currentPath={currentPath} menus={menus} position={"bottom"} />
           </div>
