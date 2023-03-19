@@ -58,7 +58,7 @@ services:
     build: ./nginx
     restart: always
     ports:
-      - "3333:80"
+      - "80:80"
     volumes:
       - ./nginx/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro
     depends_on:
