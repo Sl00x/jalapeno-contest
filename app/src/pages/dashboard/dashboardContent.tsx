@@ -24,6 +24,7 @@ import {
 } from "@tremor/react";
 import { SuccessToast } from "../../../utils/toast";
 import { useTranslation } from "next-i18next";
+import { formatDate } from "../../../utils/date";
 
 const DashboardContent: React.FC = () => {
   const { user } = useContext(AuthContext);
@@ -34,27 +35,28 @@ const DashboardContent: React.FC = () => {
   const { t, i18n } = useTranslation("dashboard");
 
   useEffect(() => {
-    const updateTransaction: Transaction[] = [];
-    let chartdata: any[] = [];
-    if (user && user.referrers) {
-      let result = 0;
-      user.referrers.forEach((refferal) => {
-        refferal.referral.transactions.forEach((trans) => {
-          result += trans.amount * 0.1;
-          updateTransaction.push(trans);
-        });
-        setTransactions(updateTransaction);
-        setTotalMoneyWin(result);
-
-        chartdata.push({
-          date: refferal.createdAt,
-          [t("users_registered_with_my_code")]: user.referrers.filter(
-            (ref) => ref.createdAt === refferal.createdAt
-          ).length,
-        });
+    if (!user?.referrals) return;
+    const dates: Record<string, number> = {};
+    const transactions: Transaction[] = [];
+    let result = 0;
+    user.referrals.forEach((refferal) => {
+      refferal.transactions.forEach((trans) => {
+        result += trans.amount * 0.1;
+        transactions.push(trans);
       });
-      setGraphData(chartdata);
-    }
+
+      const date = formatDate(refferal.createdAt, "L");
+      if (!(date in dates)) dates[date] = 0;
+      dates[date]++;
+    });
+    setGraphData(
+      Object.entries(dates).map(([date, total]) => ({
+        date,
+        [t("users_registered_with_my_code")]: total,
+      }))
+    );
+    setTotalMoneyWin(result);
+    setTransactions(transactions);
   }, [user, t]);
 
   const dataFormatter = (number: number) =>
@@ -122,7 +124,7 @@ const DashboardContent: React.FC = () => {
         <div>
           <Card className="max-w-md h-full rounded-none">
             <Text>{t("number_of_referrals")}</Text>
-            <Metric>{user?.referrers.length}</Metric>
+            <Metric>{user?.referrals.length}</Metric>
             <Subtitle>{t("each_referral_give_you")}</Subtitle>
             <Divider />
             <Callout
@@ -164,7 +166,7 @@ const DashboardContent: React.FC = () => {
               {transactions && transactions.length > 0 ? (
                 transactions.map((trans) => (
                   <ListItem key={trans.id}>
-                    <span>{trans.createdAt.split("T")[0]}</span>
+                    <span>{formatDate(trans.createdAt, "L")}</span>
                     <div className="text-lg flex gap-2 items-center">
                       <RiAddLine className="text-green-400" />
                       <span>{(trans.amount * 0.1).toFixed(2)}€</span>
@@ -189,7 +191,7 @@ const DashboardContent: React.FC = () => {
               {user?.transactions && user.transactions.length > 0 ? (
                 user.transactions.map((trans) => (
                   <ListItem key={trans.id}>
-                    <span>{trans.createdAt.split("T")[0]}</span>
+                    <span>{formatDate(trans.createdAt, "L")}</span>
                     <div className="text-lg flex gap-2 items-center">
                       {transactionStatusIcon(trans)}
                       <span>{trans.amount.toFixed(2)}€</span>

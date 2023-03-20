@@ -15,11 +15,11 @@ export class UserService {
     );
   }
 
-  async findOne(username: string): Promise<User | undefined> {
+  async findOne(username: string) {
     return this.prisma.user.findFirst({ where: { email: username } });
   }
 
-  async findById(id: number): Promise<User | undefined> {
+  async findById(id: number) {
     return this.prisma.user.findFirst({
       where: { id },
       include: {
@@ -32,17 +32,12 @@ export class UserService {
         referrals: {
           orderBy: { createdAt: 'asc' },
           include: {
-            referrer: true,
+            transactions: true,
           },
         },
-        referrers: {
-          orderBy: { createdAt: 'asc' },
+        referrer: {
           include: {
-            referral: {
-              include: {
-                transactions: true,
-              },
-            },
+            transactions: true,
           },
         },
       },
@@ -82,16 +77,11 @@ export class UserService {
       where: { id: userId },
     });
 
-    if (user.referrerCode) {
-      const referrer = await this.prisma.user.findFirst({
-        where: { referralCode: user.referrerCode },
+    if (user.referrer) {
+      await this.prisma.user.update({
+        data: { balance: user.referrer.balance + amount * 0.1 },
+        where: { id: user.referrer.id },
       });
-      if (referrer) {
-        await this.prisma.user.update({
-          data: { balance: referrer.balance + amount * 0.1 },
-          where: { id: referrer.id },
-        });
-      }
     }
   }
 }

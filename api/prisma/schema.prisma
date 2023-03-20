@@ -31,32 +31,33 @@ model User {
   balance         Float     @default(0)
   birthdate       DateTime
   referralCode    String    @default(uuid())
-  referrerCode    String?
+  referrerId      Int?
+  referrer        User?     @relation(name: "refferal", fields: [referrerId], references: [id])
   createdAt       DateTime  @default(now())
   deleteAt        DateTime?
 
-  wonContests     Contest[]
-  transactions    Transaction[]
-  partOfContests  PartsOfContests[]
-
-  referrals  Referring[] @relation("RefersTo")
-  referrers  Referring[] @relation("ReferredBy")
+  referrals             User[]    @relation(name: "refferal")
+  wonContestStates      ContestState[]
+  transactions          Transaction[]
+  partOfContests        PartsOfContests[]
+  contests              Contest[]
 }
 
 model Contest {
-  id            Int       @default(autoincrement()) @id
-  name          String    @unique
-  description   String
-  startAt       DateTime
-  endAt         DateTime
-  price         Float
-  winner        User?     @relation(fields: [winnerId], references: [id])
-  winnerId      Int?
-  createdAt     DateTime  @default(now())
-  deleteAt      DateTime?
+  id              Int         @default(autoincrement()) @id
+  name            String      @unique
+  description     String
+  startAt         DateTime
+  endAt           DateTime
+  price           Float
+  ownerId         Int?
+  owner           User?       @relation(fields: [ownerId], references: [id])
+  createdAt       DateTime    @default(now())
+  deleteAt        DateTime?
 
-  steps         Step[]
-  participants  PartsOfContests[]
+  contestState    ContestState?
+  steps           Step[]
+  participants    PartsOfContests[]
 }
 
 model Step {
@@ -69,34 +70,41 @@ model Step {
 }
 
 model PartsOfContests {
-  id        Int     @default(autoincrement()) @id
-  contest   Contest @relation(fields: [contestId], references: [id])
+  id        Int       @default(autoincrement()) @id
+  contest   Contest   @relation(fields: [contestId], references: [id])
   contestId Int
-  user      User    @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
   userId    Int
   
-  createdAt     DateTime  @default(now())
-  deleteAt      DateTime?
+  createdAt DateTime  @default(now())
+  deleteAt  DateTime?
 }
 
 model Transaction {
-  id        Int     @default(autoincrement()) @id
+  id        Int       @default(autoincrement()) @id
   orderId   String
   status    String
   amount    Float     @default(0)
-  createdAt     DateTime  @default(now())
-  deleteAt      DateTime?
-  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+  deleteAt  DateTime?
+  user      User      @relation(fields: [userId], references: [id])
   userId    Int
 }
 
-model Referring {
-  id          Int     @id @default(autoincrement())
-  referralId  Int
-  referrerId  Int
-  createdAt   DateTime @default(now())
-  referral User @relation("RefersTo", fields: [referralId], references: [id])
-  referrer User @relation("ReferredBy", fields: [referrerId], references: [id])
+model ContestState {
+  id            Int       @default(autoincrement()) @id
+  contest       Contest   @relation(fields: [contestId], references: [id])
+  contestId     Int       @unique
+  winner        User?     @relation(fields: [winnerId], references: [id])
+  winnerId      Int?
+  state         State     @default(WAITING)
+  createdAt     DateTime  @default(now())
+  deleteAt      DateTime?
+}
 
-  @@unique([referralId, referrerId])
+enum State {
+  WAITING
+  SHIPPING
+  RECEIVED
+  VALIDATED
 }

@@ -30,6 +30,11 @@ export class ContestController {
     return this.contestService.getContestEndSoon();
   }
 
+  @Get('wonStates')
+  async getWonStates(@Request() req) {
+    return this.contestService.getWonStates(+req.user.id);
+  }
+
   @Get(':id')
   async getContest(@Param() params) {
     return this.contestService.getContest(+params.id);

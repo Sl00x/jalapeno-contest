@@ -29,12 +29,16 @@ export class ContestService {
         steps: {
           include: { prize: true },
         },
-        winner: {
-          select: {
-            id: true,
-            email: true,
-            firstname: true,
-            lastname: true,
+        contestState: {
+          include: {
+            winner: {
+              select: {
+                id: true,
+                email: true,
+                firstname: true,
+                lastname: true,
+              },
+            },
           },
         },
         participants: {
@@ -62,12 +66,16 @@ export class ContestService {
         steps: {
           include: { prize: true },
         },
-        winner: {
-          select: {
-            id: true,
-            email: true,
-            firstname: true,
-            lastname: true,
+        contestState: {
+          include: {
+            winner: {
+              select: {
+                id: true,
+                email: true,
+                firstname: true,
+                lastname: true,
+              },
+            },
           },
         },
         participants: {
@@ -90,12 +98,16 @@ export class ContestService {
         steps: {
           include: { prize: true },
         },
-        winner: {
-          select: {
-            id: true,
-            email: true,
-            firstname: true,
-            lastname: true,
+        contestState: {
+          include: {
+            winner: {
+              select: {
+                id: true,
+                email: true,
+                firstname: true,
+                lastname: true,
+              },
+            },
           },
         },
         participants: {
@@ -137,12 +149,16 @@ export class ContestService {
         steps: {
           include: { prize: true },
         },
-        winner: {
-          select: {
-            id: true,
-            email: true,
-            firstname: true,
-            lastname: true,
+        contestState: {
+          include: {
+            winner: {
+              select: {
+                id: true,
+                email: true,
+                firstname: true,
+                lastname: true,
+              },
+            },
           },
         },
         participants: {
@@ -181,6 +197,12 @@ export class ContestService {
         partOfContests: { create: [{ contestId }] },
       },
       where: { id: user.id },
+    });
+  }
+
+  async getWonStates(userId: User['id']) {
+    return this.prisma.contestState.findMany({
+      where: { winnerId: userId },
     });
   }
 }

@@ -1,5 +1,4 @@
 import PartOfContest from "./partOfContest.model";
-import Referrer from "./referrer.model";
 import Transaction from "./transaction.model";
 
 export default interface User {
@@ -10,8 +9,10 @@ export default interface User {
   birthdate: string;
   balance: number;
   referralCode: string;
-  referrers: Referrer[];
-  referrals: Referrer[];
+  referrer: User;
+  referrals: User[];
   partOfContests: PartOfContest[];
   transactions: Transaction[];
+  createdAt: string;
+  deletedAt?: string;
 }

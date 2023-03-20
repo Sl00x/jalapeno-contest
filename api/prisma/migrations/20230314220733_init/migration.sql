@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "PartsOfContests" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN     "deleteAt" TIMESTAMP(3);
