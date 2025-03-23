@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+:root {
+  --red-test: #b71540;
+}
+
+@theme inline {
+  --color-red-test: var(--red-test);
+}

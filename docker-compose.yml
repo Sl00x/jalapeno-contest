@@ -1,14 +1,12 @@
-version: "3.9"
-
 services:
-  app:
-    build: ./app
+  frontend:
+    build: ./frontend
     volumes:
-      - ./app:/app
+      - ./frontend:/app
     restart: always
 
   database:
-    image: postgres:12.11-alpine
+    image: postgres:17.4-alpine
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
@@ -16,34 +14,37 @@ services:
       timeout: 5s
       retries: 5
     environment:
-      PGUSER: ${POSTGRES_USER}
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_HOST: ${DATABASE_HOST}
+      POSTGRES_PORT: ${DATABASE_PORT}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_DB}
     volumes:
       - database:/var/lib/postgresql/data
 
   adminer:
-    image: adminer:4.8.1
+    image: adminer:5
     restart: always
     ports:
       - 3334:8080
     depends_on:
       - database
 
-  api:
+  backend:
     privileged: true
-    build: ./api
+    build: ./backend
     restart: always
     volumes:
-      - ./api:/app
+      - ./backend:/app
     environment:
       PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID}
       PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET}
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
-      JWT_SECRET: "Secret jwt pass"
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_DB: ${DATABASE_DB}
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
       database:
         condition: service_healthy
@@ -56,8 +57,9 @@ services:
     volumes:
       - ./nginx/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro
     depends_on:
-      - app
-      - api
+      - frontend
+      - backend
 
 volumes:
   database:
+    driver: local
