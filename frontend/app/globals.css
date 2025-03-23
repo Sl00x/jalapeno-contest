@@ -1,9 +1,140 @@
 @import "tailwindcss";
 
-:root {
-  --red-test: #b71540;
-}
+@theme {
+  /* Color styles */
+  --color-transparent: #ffffff;
 
-@theme inline {
-  --color-red-test: var(--red-test);
+  --color-gray_alpha-25: #110c22;
+  --color-gray_alpha-50: #110c22;
+  --color-gray_alpha-75: #110c22;
+  --color-gray_alpha-100: #110c22;
+  --color-gray_alpha-200: #110c22;
+  --color-gray_alpha-300: #110c22;
+  --color-gray_alpha-400: #110c22;
+  --color-gray_alpha-500: #110c22;
+  --color-gray_alpha-600: #110c22;
+  --color-gray_alpha-700: #110c22;
+  --color-gray_alpha-800: #110c22;
+  --color-gray_alpha-900: #110c22;
+
+  --color-gray-25: #f8f8f8;
+  --color-gray-50: #f3f3f4;
+  --color-gray-75: #ececed;
+  --color-gray-100: #e2e2e4;
+  --color-gray-200: #d9d8dc;
+  --color-gray-300: #c6c5ca;
+  --color-gray-400: #b3b1b8;
+  --color-gray-500: #8d8a95;
+  --color-gray-600: #676472;
+  --color-gray-700: #4f4b5c;
+  --color-gray-800: #2e293d;
+  --color-gray-900: #110c22;
+
+  --color-neutral_black-4: #000000;
+  --color-neutral_black-7: #000000;
+  --color-neutral_black-12: #000000;
+  --color-neutral_black-16: #000000;
+  --color-neutral_black-20: #000000;
+  --color-neutral_black-24: #000000;
+  --color-neutral_black-32: #000000;
+  --color-neutral_black-48: #000000;
+  --color-neutral_black-64: #000000;
+  --color-neutral_black-76: #000000;
+  --color-neutral_black-88: #000000;
+  --color-neutral_black-100: #000000;
+
+  --color-neutral_white-4: #ffffff;
+  --color-neutral_white-7: #ffffff;
+  --color-neutral_white-12: #ffffff;
+  --color-neutral_white-16: #ffffff;
+  --color-neutral_white-20: #ffffff;
+  --color-neutral_white-24: #ffffff;
+  --color-neutral_white-32: #ffffff;
+  --color-neutral_white-48: #ffffff;
+  --color-neutral_white-64: #ffffff;
+  --color-neutral_white-76: #ffffff;
+  --color-neutral_white-88: #ffffff;
+  --color-neutral_white-100: #ffffff;
+
+  --color-primary-25: #f9f8ff;
+  --color-primary-50: #f1eeff;
+  --color-primary-75: #e2dcff;
+  --color-primary-100: #c6bbff;
+  --color-primary-200: #bcafff;
+  --color-primary-300: #a797ff;
+  --color-primary-400: #8b75ff;
+  --color-primary-500: #7357ff;
+  --color-primary-600: #6347f4;
+  --color-primary-700: #553ade;
+  --color-primary-800: #3c28a4;
+  --color-primary-900: #21194d;
+
+  --color-secondary-25: #f4fff5;
+  --color-secondary-50: #e9ffea;
+  --color-secondary-75: #cfffd1;
+  --color-secondary-100: #adfcb0;
+  --color-secondary-200: #98f89c;
+  --color-secondary-300: #7ff183;
+  --color-secondary-400: #5ce762;
+  --color-secondary-500: #48d64e;
+  --color-secondary-600: #3bc641;
+  --color-secondary-700: #37b13d;
+  --color-secondary-800: #2d8331;
+  --color-secondary-900: #143e16;
+
+  --color-danger-25: #fff9f9;
+  --color-danger-50: #fff1f1;
+  --color-danger-75: #ffe0e0;
+  --color-danger-100: #ffc7c7;
+  --color-danger-200: #ffa7a7;
+  --color-danger-300: #ff8080;
+  --color-danger-400: #f95e5e;
+  --color-danger-500: #f03d3d;
+  --color-danger-600: #cf2a2a;
+  --color-danger-700: #a41f1f;
+  --color-danger-800: #591a1a;
+  --color-danger-900: #271111;
+
+  --color-info-25: #f5faff;
+  --color-info-50: #e9f4ff;
+  --color-info-75: #c2e2ff;
+  --color-info-100: #a0d2ff;
+  --color-info-200: #71bbff;
+  --color-info-300: #45a6ff;
+  --color-info-400: #1c92ff;
+  --color-info-500: #0084ff;
+  --color-info-600: #0076e2;
+  --color-info-700: #0057a7;
+  --color-info-800: #0c355a;
+  --color-info-900: #0d1c2b;
+
+  --color-success-25: #f3fdf8;
+  --color-success-50: #e2fcf0;
+  --color-success-75: #c6f1dd;
+  --color-success-100: #a6e9c8;
+  --color-success-200: #6fdaa6;
+  --color-success-300: #4dcc8f;
+  --color-success-400: #28c07a;
+  --color-success-500: #0baa60;
+  --color-success-600: #0a9c55;
+  --color-success-700: #0c7844;
+  --color-success-800: #104b2f;
+  --color-success-900: #0d1f11;
+
+  --color-warning-25: #fffaed;
+  --color-warning-50: #fff5db;
+  --color-warning-75: #ffecba;
+  --color-warning-100: #ffdd86;
+  --color-warning-200: #ffcb45;
+  --color-warning-300: #fdba0f;
+  --color-warning-400: #f2aa09;
+  --color-warning-500: #e09400;
+  --color-warning-600: #d07d00;
+  --color-warning-700: #b55e0f;
+  --color-warning-800: #5c3111;
+  --color-warning-900: #27170b;
+
+  /* Radius styles */
+
+  --radius-default: 0.5rem;
 }
