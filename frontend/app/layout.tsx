@@ -1,6 +1,5 @@
-import { RootStore } from "@/features/store/root-store";
+import { ReduxProvider } from "@/components/layout/ReduxProvider";
 import { Metadata } from "next";
-import { Provider } from "react-redux";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Provider store={RootStore}>{children}</Provider>
+        <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>
   );
