@@ -1,9 +1,11 @@
 services:
   frontend:
+    restart: always
     build:
       context: ./frontend
       dockerfile: ./prod.Dockerfile
-    restart: always
+    env_file:
+      - .env
 
   database:
     image: postgres:12.11-alpine
@@ -30,8 +32,6 @@ services:
       dockerfile: ./prod.Dockerfile
     restart: always
     environment:
-      PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID}
-      PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET}
       DATABASE_HOST: ${DATABASE_HOST}
       DATABASE_PORT: ${DATABASE_PORT}
       DATABASE_USER: ${DATABASE_USER}

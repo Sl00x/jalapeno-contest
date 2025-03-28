@@ -2,7 +2,6 @@ import {
   Controller,
   Get,
   Param,
-  Post,
   Query,
   Request,
   UseGuards,
@@ -34,14 +33,5 @@ export class ContestController {
   @Get(':id')
   async getContest(@Param('id') id: string) {
     return this.contestService.findOne(id);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post(':id/participate')
-  async participate(
-    @Param('id') id: string,
-    @Request() req: AuthenticatedRequest,
-  ) {
-    return this.contestService.participate(id, req.user.id);
   }
 }

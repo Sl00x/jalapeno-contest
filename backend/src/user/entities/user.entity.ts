@@ -25,9 +25,6 @@ export class User extends DefaultEntity {
   @Column({ select: false })
   password: string;
 
-  @Column({ type: 'float', default: 0 })
-  balance: number;
-
   @Column({ type: 'date' })
   birthdate: Date;
 

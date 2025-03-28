@@ -1,6 +1,8 @@
 services:
   frontend:
     build: ./frontend
+    env_file:
+      - .env
     volumes:
       - ./frontend:/app
     restart: always
@@ -36,15 +38,8 @@ services:
     restart: always
     volumes:
       - ./backend:/app
-    environment:
-      PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID}
-      PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET}
-      DATABASE_HOST: ${DATABASE_HOST}
-      DATABASE_PORT: ${DATABASE_PORT}
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      DATABASE_DB: ${DATABASE_DB}
-      JWT_SECRET: ${JWT_SECRET}
+    env_file:
+      - .env
     depends_on:
       database:
         condition: service_healthy

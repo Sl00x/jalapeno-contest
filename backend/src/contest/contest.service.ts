@@ -1,13 +1,7 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Contest } from 'src/contest/entities/contest.entity';
-import { Participant } from 'src/contest/entities/participant.entity';
 import { User } from 'src/user/entities/user.entity';
-import { UserService } from 'src/user/user.service';
 import { ILike, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 
 @Injectable()
@@ -15,9 +9,6 @@ export class ContestService {
   constructor(
     @InjectRepository(Contest)
     private contestRepository: Repository<Contest>,
-    @InjectRepository(Participant)
-    private participantRepository: Repository<Participant>,
-    private userService: UserService,
   ) {}
 
   async findAll(query?: string) {
@@ -81,40 +72,5 @@ export class ContestService {
         winner: true,
       },
     });
-  }
-
-  async participate(contestId: Contest['id'], userId: User['id']) {
-    const contest = await this.findOne(contestId);
-    if (!contest) {
-      throw new NotFoundException('Contest not found');
-    }
-    const user = await this.userService.findOne({
-      where: { id: userId },
-      relations: { participations: true },
-    });
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    if (user.balance < contest.price) {
-      throw new BadRequestException('Insufficient funds');
-    }
-
-    const previousParticipation = user.participations.find(
-      (participation) => participation.contestId === contest.id,
-    );
-    if (previousParticipation) {
-      await this.participantRepository.update(previousParticipation.id, {
-        tickets: previousParticipation.tickets + 1,
-      });
-    } else {
-      await this.participantRepository.save({
-        contestId: contest.id,
-        userId: user.id,
-        tickets: 1,
-      });
-    }
-
-    await this.userService.removeFromBalance(user.id, contest.price);
   }
 }

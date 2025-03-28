@@ -7,7 +7,6 @@ export default interface User {
   firstname: string;
   lastname: string;
   birthdate: string;
-  balance: number;
   referralCode: string;
   referrer: User;
   referrals: User[];
