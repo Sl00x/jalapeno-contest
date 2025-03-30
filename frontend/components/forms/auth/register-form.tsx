@@ -5,30 +5,50 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
-export function LoginForm({
+export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");
+
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { signInWithEmail, signWithProvider } = useAuth();
+  const confirmPasswordRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    confirmPasswordRef.current?.setCustomValidity(
+      password !== confirmPassword ? "Passwords do not match." : ""
+    );
+  }, [confirmPasswordRef.current, password, confirmPassword]);
+
+  const { signWithProvider, signUpWithEmail } = useAuth();
+  const router = useRouter();
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">SIGN IN</CardTitle>
+          <CardTitle className="text-xl">CREATE AN ACCOUNT</CardTitle>
         </CardHeader>
         <CardContent>
           <form
-            onSubmit={(event) => {
+            onSubmit={async (event) => {
+              setLoading(true);
               event.preventDefault();
-              signInWithEmail(email, password);
+              if (await signUpWithEmail(email, password)) {
+                router.push("/auth/login" + (from ? `?from=${from}` : ""));
+              }
+              setLoading(false);
             }}
           >
             <div className="grid gap-6">
@@ -36,7 +56,10 @@ export function LoginForm({
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={() => signWithProvider("google")}
+                  type="button"
+                  onClick={() => {
+                    signWithProvider("google");
+                  }}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
@@ -44,7 +67,7 @@ export function LoginForm({
                       fill="currentColor"
                     />
                   </svg>
-                  Login with Google
+                  Register with Google
                 </Button>
               </div>
               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
@@ -67,12 +90,6 @@ export function LoginForm({
                 <div className="grid gap-3">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
-                    <a
-                      href="#"
-                      className="ml-auto text-sm underline-offset-4 hover:underline"
-                    >
-                      Forgot your password?
-                    </a>
                   </div>
                   <Input
                     id="password"
@@ -82,17 +99,30 @@ export function LoginForm({
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
+                <div className="grid gap-3">
+                  <div className="flex items-center">
+                    <Label htmlFor="confirm-password">Confirm password</Label>
+                  </div>
+                  <Input
+                    id="confirm-password"
+                    type="password"
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    ref={confirmPasswordRef}
+                  />
+                </div>
                 <Button type="submit" className="w-full">
-                  Login
+                  {loading ? <Spinner /> : "Register"}
                 </Button>
               </div>
               <div className="text-center text-sm">
-                Don&apos;t have an account?{" "}
+                Already have an account?{" "}
                 <Link
-                  href="/auth/register"
+                  href={"/auth/login" + (from ? `?from=${from}` : "")}
                   className="underline underline-offset-4"
                 >
-                  Sign up
+                  Sign in
                 </Link>
               </div>
             </div>

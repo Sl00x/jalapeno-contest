@@ -5,41 +5,41 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
-export function RegisterForm({
+export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");
+
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const confirmPasswordRef = useRef<HTMLInputElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
-
-  useEffect(() => {
-    confirmPasswordRef.current?.setCustomValidity(
-      password !== confirmPassword ? "Passwords do not match." : ""
-    );
-  }, [confirmPasswordRef.current, password, confirmPassword]);
-
-  const { signWithProvider, signUpWithEmail } = useAuth();
+  const { signInWithEmail, signWithProvider } = useAuth();
+  const router = useRouter();
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">CREATE AN ACCOUNT</CardTitle>
+          <CardTitle className="text-xl">SIGN IN</CardTitle>
         </CardHeader>
         <CardContent>
           <form
-            ref={formRef}
-            onSubmit={(event) => {
+            onSubmit={async (event) => {
+              setLoading(true);
               event.preventDefault();
-              signUpWithEmail(email, password);
+              if (await signInWithEmail(email, password)) {
+                router.push(from ?? "/");
+              }
+              setLoading(false);
             }}
           >
             <div className="grid gap-6">
@@ -47,7 +47,10 @@ export function RegisterForm({
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={() => signWithProvider("google")}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    signWithProvider("google");
+                  }}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
@@ -55,7 +58,7 @@ export function RegisterForm({
                       fill="currentColor"
                     />
                   </svg>
-                  Register with Google
+                  Login with Google
                 </Button>
               </div>
               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
@@ -78,6 +81,12 @@ export function RegisterForm({
                 <div className="grid gap-3">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
+                    <a
+                      href={"/auth/forgot" + (from ? `?from=${from}` : "")}
+                      className="ml-auto text-sm underline-offset-4 hover:underline"
+                    >
+                      Forgot your password?
+                    </a>
                   </div>
                   <Input
                     id="password"
@@ -87,30 +96,17 @@ export function RegisterForm({
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                <div className="grid gap-3">
-                  <div className="flex items-center">
-                    <Label htmlFor="confirm-password">Confirm password</Label>
-                  </div>
-                  <Input
-                    id="confirm-password"
-                    type="password"
-                    required
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    ref={confirmPasswordRef}
-                  />
-                </div>
-                <Button type="submit" className="w-full">
-                  Register
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? <Spinner /> : "Login"}
                 </Button>
               </div>
               <div className="text-center text-sm">
-                Already have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link
-                  href="/auth/login"
+                  href={"/auth/register" + (from ? `?from=${from}` : "")}
                   className="underline underline-offset-4"
                 >
-                  Sign in
+                  Sign up
                 </Link>
               </div>
             </div>

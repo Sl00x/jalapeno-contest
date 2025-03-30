@@ -12,11 +12,10 @@ import { MENU_ITEMS } from "@/constants/menu.const";
 import { SearchIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export const Navigation = () => {
   const pathname = usePathname();
-  const router = useRouter();
 
   return (
     <div className="flex flex-row justify-between items-center px-20 mt-8">

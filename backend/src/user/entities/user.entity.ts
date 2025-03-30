@@ -13,20 +13,9 @@ import {
 
 @Entity()
 export class User extends DefaultEntity {
-  @Column({ unique: true })
-  email: string;
-
-  @Column()
-  firstname: string;
-
-  @Column()
-  lastname: string;
-
-  @Column({ select: false })
-  password: string;
-
-  @Column({ type: 'date' })
-  birthdate: Date;
+  //Supabase uuid
+  @Column({ type: 'uuid', primary: true })
+  id: string;
 
   @Column({ type: 'uuid' })
   @Generated('uuid')
