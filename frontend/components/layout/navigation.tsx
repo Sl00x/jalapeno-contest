@@ -18,7 +18,7 @@ export const Navigation = () => {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-row justify-between items-center px-20 mt-8">
+    <div className="flex flex-row justify-between items-center px-20 pt-8">
       <div className="flex-1 flex flex-row items-center space-x-4">
         <Image
           src="https://picsum.photos/200"

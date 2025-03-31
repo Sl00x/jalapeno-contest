@@ -26,9 +26,9 @@ export default async function RootLayout({
   const cookies = headersObj.get("cookie");
 
   return (
-    <html lang="en">
-      <body className={`${geistMono.className} antialiased`}>
-        <main>
+    <html lang="en" className="h-full">
+      <body className={`${geistMono.className} antialiased h-full`}>
+        <main className="h-full">
           <ContextProvider cookies={cookies}>
             <ReduxProvider>
               <AuthProvider>{children}</AuthProvider>

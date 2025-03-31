@@ -6,9 +6,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <div className="h-full flex flex-col">
       <Navigation />
-      {children}
-    </>
+      <div className="flex-1 flex flex-col">{children}</div>
+    </div>
   );
 }
