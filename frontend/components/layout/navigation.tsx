@@ -1,6 +1,6 @@
 "use client";
 
-import { SignInButton } from "@/components/auth/SignInButton";
+import { AccountButton } from "@/components/auth/AccountButton";
 import { Input } from "@/components/ui/input";
 import {
   NavigationMenu,
@@ -51,7 +51,7 @@ export const Navigation = () => {
           </NavigationMenuList>
         </NavigationMenu>
       </div>
-      <SignInButton />
+      <AccountButton />
     </div>
   );
 };
