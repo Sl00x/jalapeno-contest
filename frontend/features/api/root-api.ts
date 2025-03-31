@@ -6,10 +6,10 @@ const baseQuery = fetchBaseQuery({
   baseUrl: "/api",
   mode: "cors",
   prepareHeaders: (headers) => {
-    if (localStorage.getItem("authenticated")) {
-      const token = localStorage.getItem("authenticated")?.replaceAll('"', "");
+    if (localStorage.getItem("access_token")) {
+      const token = localStorage.getItem("access_token");
       if (token) {
-        headers.set("authorization", `Bearer ${token}`);
+        headers.set("Authorization", `Bearer ${token}`);
       }
     }
     headers.set("Access-Control-Allow-Origin", "*");
@@ -18,52 +18,32 @@ const baseQuery = fetchBaseQuery({
 });
 export const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });
 
+export const API_TAGS = ["Contest", "ME"];
+
 export const rootApi = createApi({
   reducerPath: "rootApi",
   baseQuery: baseQuery,
-  tagTypes: ["Contest", "Profile"],
+  tagTypes: API_TAGS,
   endpoints: (builder) => ({
-    // BEGIN /auth
+    // BEGIN /user
 
-    getProfile: builder.query<User, void>({
+    getMe: builder.query<User, void>({
       query: () => ({
-        url: "/profile",
+        url: `/user/me`,
         method: "GET",
         type: "application/json",
       }),
-      providesTags: ["Profile"],
+      providesTags: ["ME"],
     }),
-    register: builder.mutation<User, Partial<User>>({
+
+    createUser: builder.mutation<void, { id: string }>({
       query: (body) => ({
-        url: "/register",
+        url: `/user`,
         method: "POST",
         type: "application/json",
         body,
       }),
-    }),
-    login: builder.mutation<
-      { access_token: string },
-      { email: string; password: string }
-    >({
-      query: (body) => ({
-        url: "/login",
-        method: "POST",
-        type: "application/json",
-        body,
-      }),
-      invalidatesTags: ["Profile"],
-    }),
-
-    // END /auth
-    // BEGIN /user
-
-    refund: builder.mutation<void, { amount: number; orderId: string }>({
-      query: (body) => ({
-        url: `/user/refund`,
-        method: "PUT",
-        type: "application/json",
-        body,
-      }),
+      invalidatesTags: ["ME"],
     }),
 
     // END /user
@@ -129,14 +109,12 @@ export const rootApi = createApi({
 });
 
 export const {
-  useRefundMutation,
   useGetContestsQuery,
   useLazyGetContestsQuery,
   useParticipateMutation,
   useGetContestQuery,
   useGetContestEndSoonQuery,
   useGetSelfContestsQuery,
-  useGetProfileQuery,
-  useLoginMutation,
-  useRegisterMutation,
+  useCreateUserMutation,
+  useGetMeQuery,
 } = rootApi;

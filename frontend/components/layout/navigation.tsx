@@ -1,5 +1,6 @@
 "use client";
 
+import { SignInButton } from "@/components/auth/SignInButton";
 import { Input } from "@/components/ui/input";
 import {
   NavigationMenu,
@@ -7,7 +8,6 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { ConnectWalletButton } from "@/components/wallet/ConnectWalletButton";
 import { MENU_ITEMS } from "@/constants/menu.const";
 import { SearchIcon } from "lucide-react";
 import Image from "next/image";
@@ -51,7 +51,7 @@ export const Navigation = () => {
           </NavigationMenuList>
         </NavigationMenu>
       </div>
-      <ConnectWalletButton />
+      <SignInButton />
     </div>
   );
 };

@@ -1,5 +1,6 @@
-import { Navigation } from "@/components/layout/navigation";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ReduxProvider } from "@/components/layout/ReduxProvider";
+import { Toaster } from "@/components/ui/sonner";
 import ContextProvider from "@/context";
 import { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
@@ -27,12 +28,14 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistMono.className} antialiased`}>
-        <ContextProvider cookies={cookies}>
-          <ReduxProvider>
-            <Navigation />
-            {children}
-          </ReduxProvider>
-        </ContextProvider>
+        <main>
+          <ContextProvider cookies={cookies}>
+            <ReduxProvider>
+              <AuthProvider>{children}</AuthProvider>
+            </ReduxProvider>
+          </ContextProvider>
+        </main>
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

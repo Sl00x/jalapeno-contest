@@ -1,35 +1,11 @@
-import {
-  IsDateString,
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  MaxLength,
-} from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
-export class UserCreateInput {
+export class CreateUserDto {
+  @ApiPropertyOptional({ description: 'Referrer ID if applicable' })
+  @IsOptional()
   @IsString()
-  @IsEmail()
-  @IsNotEmpty()
-  @MaxLength(255)
-  email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(50)
-  firstname: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(50)
-  lastname: string;
-
-  @IsDateString()
-  @IsNotEmpty()
-  birthdate: Date;
-
-  @IsString()
-  @IsNotEmpty()
-  password: string;
-
-  referrerCode?: string | null;
+  referrerId?: string;
 }
+
+export class UpdateUserDto {}

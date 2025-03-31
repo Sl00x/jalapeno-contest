@@ -1,13 +1,6 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Query,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
-import { AuthenticatedRequest } from 'src/auth/auth.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Controller, Get, Param, Query, Req, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
+import { AuthenticatedRequest } from 'src/auth/strategies/supabase.strategy';
 import { ContestService } from './contest.service';
 
 @Controller('contest')
@@ -21,8 +14,8 @@ export class ContestController {
 
   @UseGuards(JwtAuthGuard)
   @Get('self')
-  async getSelfContests(@Request() req: AuthenticatedRequest) {
-    return this.contestService.findAllParticipating(req.user.id);
+  async getSelfContests(@Req() req: AuthenticatedRequest) {
+    return this.contestService.findAllParticipating(req.user.sub);
   }
 
   @Get('soon')
