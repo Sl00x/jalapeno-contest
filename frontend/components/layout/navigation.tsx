@@ -1,6 +1,7 @@
 "use client";
 
 import { AccountButton } from "@/components/auth/AccountButton";
+import { MobileNavigation } from "@/components/layout/MobileNavigation";
 import { Input } from "@/components/ui/input";
 import {
   NavigationMenu,
@@ -18,8 +19,8 @@ export const Navigation = () => {
   const pathname = usePathname();
 
   return (
-    <div className="w-full fixed flex flex-row justify-between backdrop-blur-lg z-[50] bg-white/50 items-center px-20 pt-4 pb-4 border-b border-stone-100">
-      <div className="flex-1 flex flex-row items-center space-x-4">
+    <div className="w-full fixed flex flex-row justify-between z-[50] bg-white items-center px-6 xl:px-20 pt-4 pb-4 border-b border-stone-100 shadow-2xl">
+      <div className="hidden xl:flex flex-1 flex-row items-center space-x-4">
         <Image
           src="https://picsum.photos/200"
           alt="avatar"
@@ -50,6 +51,9 @@ export const Navigation = () => {
             ))}
           </NavigationMenuList>
         </NavigationMenu>
+      </div>
+      <div className="xl:hidden">
+        <MobileNavigation />
       </div>
       <AccountButton />
     </div>

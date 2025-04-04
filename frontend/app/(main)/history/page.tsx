@@ -18,7 +18,7 @@ export default function Winner() {
       winner: "@winner123",
       bid: "5.2 ETH",
       date: "Jan 15, 2025",
-      status: "Completed",
+      prize: "Ferrari",
     },
     {
       nft: "Abstract Reality #064",
@@ -26,7 +26,7 @@ export default function Winner() {
       winner: "@nftking",
       bid: "3.8 ETH",
       date: "Jan 12, 2025",
-      status: "Completed",
+      prize: "Porsche",
     },
     {
       nft: "Meta Beings #392",
@@ -34,7 +34,7 @@ export default function Winner() {
       winner: "@cryptofan",
       bid: "4.5 ETH",
       date: "Jan 10, 2025",
-      status: "Completed",
+      prize: "Bugatti",
     },
     {
       nft: "Digital Dreams #256",
@@ -42,13 +42,15 @@ export default function Winner() {
       winner: "@artlover",
       bid: "6.1 ETH",
       date: "Jan 8, 2025",
-      status: "Completed",
+      prize: "Peugeot",
     },
   ];
 
   return (
-    <main className="flex flex-col px-20 mt-20 p-10">
-      <h1 className="text-7xl font-bold mb-2">Contest Winners</h1>
+    <main className="flex flex-col px-6 xl:px-20 mt-20 p-10">
+      <h1 className="text-2xl xl:text-4xl 2xl:text-7xl font-bold mb-2">
+        Contest Winners
+      </h1>
       <p className="text-gray-600 mb-6">
         History of successful contest and their winners
       </p>
@@ -57,9 +59,9 @@ export default function Winner() {
           <TableRow>
             <TableHead>Contest</TableHead>
             <TableHead>Winner</TableHead>
-            <TableHead>Final Bid</TableHead>
+            <TableHead>Ticket price</TableHead>
             <TableHead>Date</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead>Prize</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -85,11 +87,7 @@ export default function Winner() {
               <TableCell>{winner.winner}</TableCell>
               <TableCell>{winner.bid}</TableCell>
               <TableCell>{winner.date}</TableCell>
-              <TableCell>
-                <span className="inline-block bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">
-                  {winner.status}
-                </span>
-              </TableCell>
+              <TableCell>{winner.prize}</TableCell>
             </TableRow>
           ))}
         </TableBody>

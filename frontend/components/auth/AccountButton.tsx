@@ -55,8 +55,8 @@ export const AccountButton = () => {
           </Button>
         </>
       ) : (
-        <DropdownMenu>
-          <DropdownMenuTrigger>
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger className="cursor-pointer">
             <UserCircle />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
